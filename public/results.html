@@ -1,28 +1,95 @@
-
+<!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css" />
     <style>
-      select {
-        height: 30px;
+      body {
+        font-family: sans-serif;
       }
+      #card-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        background: #f1f1f1;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .card {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #fff;
+        color: #000; /* Setting text color to black */
+      }
+
+      .card .list-name {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .card .total-size {
+        font-size: 18px;
+      }
+      .card .total-size,
+      .card .category {
+        margin-bottom: 5px;
+      }
+      
     </style>
+
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
   </head>
+
   <body>
-    <!--         <script>
-      
-      // var myArgs = t.arg('myArgs'); 
-//           console.log("Myargs:",myArgs)
-//       document.getElementById("demo").innerHTML = myArgs;
-      
-    
-    </script> -->
+    <div id="card-container"></div>
 
-    <h1>Hey there! 👋</h1>
+    <script>
+      var t = window.TrelloPowerUp.iframe();
 
-    <div id="list"></div>
+      t.render(function () {
+        var data = t.arg("message");
+        if (!Array.isArray(data)) {
+          console.error("Data is not an array");
+          return;
+        }
+        console.log("DATAAAAA", data);
+        var container = document.getElementById("card-container");
 
-    <script src="./js/results.js"></script>
+        // Iterate over each object in the data array
+        data.forEach(function (item) {
+          // Create div for each list
+          var div = document.createElement("div");
+          div.className = "card";
+          div.innerHTML =
+            `<p class="list-name">${item.listName}</p>` +
+            `<p class="total-size">Total Size <strong>${item.totalPoints}</strong></p>`;
+
+          // Create div for each category
+          if (item.categoryPoints.length > 0) {
+            item.categoryPoints.forEach(function (category) {
+              var p = document.createElement("p");
+              p.className = "category";
+
+              // Create a span for the category name and set its background color
+              var span = document.createElement("span");
+              span.textContent = category.text;
+              span.style.backgroundColor = category.color;
+              span.style.padding = "4px 8px"; // Add some padding to give space around the text
+              span.style.borderRadius = "4px"; // Optional: to make the edges rounded
+
+              // Append the span to the paragraph and add the sizing after it
+              p.appendChild(span);
+              p.innerHTML += ` <strong>${category.sizing}</strong> Points`;
+
+              div.appendChild(p);
+            });
+          }
+
+          container.appendChild(div);
+        });
+
+        return t.sizeTo("#card-container");
+      });
+    </script>
   </body>
 </html>

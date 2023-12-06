@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adjust Member Sizing</title>
+    <style>
+      body {
+        background-color: #282e33;
+      }
+      .memberName {
+        color: white;
+        font-weight: bold;
+        font-size: 22px;
+        padding: 5px;
+      }
+      .inputSizing {
+        padding: 10px;
+        border: none;
+        outline: 2px solid white;
+        background-color: transparent;
+        border-radius: 2px;
+        color: white;
+      }
+      button {
+        transition: 0.2s;
+        background-color: #b0b0b0;
+        color: white;
+        border: none;
+        outline: none;
+        padding: 10px;
+        border-radius: 2px;
+      }
+      button:hover {
+        background-color: #808080;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Parse the query string
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Get the memberId and currentSizing parameters
+        const memberId = urlParams.get("memberId");
+        const currentSizing = urlParams.get("currentSizing");
+        const memberName = urlParams.get("memberName");
+        const cardId = urlParams.get("cardId");
+        const idList = urlParams.get("idList");
+        const idBoard = urlParams.get("idBoard");
+
+        // Output the memberId and currentSizing to the console (for debugging)
+        console.log("memberId:", memberId);
+        console.log("currentSizing:", currentSizing);
+        console.log("memberName:", memberName);
+        console.log("cardId:", cardId);
+        console.log("idList:", idList);
+        console.log("idBoard:", idBoard);
+        // If you have form fields to populate, you can do so here. For example:
+        document.getElementById("memberName").innerText = memberName;
+        document.getElementById("sizingInput").value = currentSizing;
+      });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+  </head>
+  <body>
+    <div class="memberName" id="memberName"></div>
+    <input class="inputSizing" type="text" id="sizingInput" />
+    <button type="button" onclick="submitChanges()">Submit</button>
+
+    <script>
+      var t = TrelloPowerUp.iframe();
+
+      const API_URL = "https://uxperts-backend-staging.disruptem.com/api/v1";
+      async function submitChanges() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const memberId = urlParams.get("memberId");
+        const currentSizing = urlParams.get("currentSizing");
+        const memberName = urlParams.get("memberName");
+        const cardId = urlParams.get("cardId");
+        const idList = urlParams.get("idList");
+        const idBoard = urlParams.get("idBoard");
+        const newSizing = document.getElementById("sizingInput").value;
+        const data = {
+          member: {
+            memberId: memberId,
+            sizing: newSizing,
+            date: new Date(), //the current date
+          },
+          cardId: cardId,
+          listId: idList,
+          boardId: idBoard,
+        };
+
+        const response = await fetch(`${API_URL}/cards/`, {
+          // Replace '/your-endpoint' with your actual endpoint
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          console.log("Success:", await response.json());
+          t.closePopup();
+        } else {
+          console.error("Server responded with status", response.status);
+        }
+      }
+    </script>
+  </body>
+</html>

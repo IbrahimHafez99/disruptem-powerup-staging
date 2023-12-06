@@ -15,9 +15,9 @@ var ROCKET_ICON =
 
 var UXPERTS_ICON =
   "https://cdn.glitch.global/b9a2fc2c-0745-4a5e-83e6-d1ab9f13253f/Icon-Color%20(1).png?v=1698916395399";
-// var ENDPOINT_URL = "http://localhost:9000/api/v1";
+var ENDPOINT_URL = "http://localhost:9000/api/v1";
 // var ENDPOINT_URL = "https://uxperts-backend-staging.disruptem.com/api/v1"
-var ENDPOINT_URL = "https://powerup-backend.uxperts.io/api/v1";
+// var ENDPOINT_URL = "https://powerup-backend.uxperts.io/api/v1";
 async function fetchCards() {
   const response = await fetch(`${ENDPOINT_URL}/cards/`, { method: "GET" });
   return await response.json();

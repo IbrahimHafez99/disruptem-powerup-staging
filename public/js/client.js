@@ -181,10 +181,11 @@ window.TrelloPowerUp.initialize({
             console.log("response", response);
             return response.json();
           })
-          .then((data) => {
+          .then( async (data) => {
             console.log(data);
-            const buttonColor = data.isCompleted ? "green" : "red";
-            const buttonText = data.isCompleted
+          const isCompleted = await t.get('card', 'shared', 'isCompleted', data.isCompleted);
+            const buttonColor = isCompleted ? "green" : "red";
+            const buttonText = isCompleted
               ? "Completed"
               : "Mark as Completed";
 
@@ -206,7 +207,7 @@ window.TrelloPowerUp.initialize({
                 }).then((response) => {
                   if (response.ok) {
                     // If API call is successful, trigger UI update
-                    t.render();
+                    t.set('card', 'shared', 'isCompleted', !data.isCompleted);
                   }
                   return response.json();
                 });

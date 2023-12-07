@@ -25,7 +25,7 @@ async function fetchCards() {
 function aggregateCategories(data) {
   const categories = {};
 
-  data.forEach(item => {
+  data.forEach((item) => {
     // Check if the item is a category
     if (item.categoryId) {
       // Initialize the category if it hasn't been already
@@ -35,13 +35,13 @@ function aggregateCategories(data) {
           color: item.color,
           icon: item.icon,
           categoryId: item.categoryId,
-          sizing: 0
+          sizing: 0,
         };
       }
 
       // Add the sizing of each memberId associated with this category
-      item.memberIds.forEach(memberId => {
-        const member = data.find(member => member.memberId === memberId);
+      item.memberIds.forEach((memberId) => {
+        const member = data.find((member) => member.memberId === memberId);
         if (member) {
           categories[item.categoryId].sizing += member.sizing;
         }
@@ -53,18 +53,16 @@ function aggregateCategories(data) {
   return Object.values(categories);
 }
 
-
 function onBtnClickTwo(t) {
   return t.lists("all").then(function (lists) {
-    t.list
+    t.list;
     console.log("lists", lists);
     // lists.sort((a, b) => a.pos - b.pos);
     let results = Array(lists.length);
     let listPromises = lists.map(function (list, index) {
       return t.cards("all").then(function (cards) {
-        
         var cardList = cards.filter((card) => card.idList === list.id);
-console.log("CARDSSSSS", cardList)
+        console.log("CARDSSSSS", cardList);
         let totalSizeList = 0;
         let categories = [];
 
@@ -73,15 +71,18 @@ console.log("CARDSSSSS", cardList)
             .get(card.id, "shared", "badgeData")
             .then(function (badgeData) {
               let totalSizeCard = 0;
-            console.log(`badgeDatra_${index}`, badgeData)
+              console.log(`badgeDatra_${index}`, badgeData);
               if (badgeData) {
                 totalSizeCard = badgeData.reduce((acc, element) => {
-                  if (element.sizing && cardList.map(card => card.id).includes(element.cardId)) {
+                  if (
+                    element.sizing &&
+                    cardList.map((card) => card.id).includes(element.cardId)
+                  ) {
                     return acc + Number(element.sizing);
                   }
                   return acc;
                 }, 0);
-                console.log("totalSizeCardtotalSizeCard", totalSizeCard)
+                console.log("totalSizeCardtotalSizeCard", totalSizeCard);
                 totalSizeList += totalSizeCard;
 
                 const categorySize = badgeData
@@ -117,13 +118,15 @@ console.log("CARDSSSSS", cardList)
 
         return Promise.all(cardPromises).then(() => {
           // Group by 'text' and sum 'sizing'
-          const result = Object.values(categories.reduce((acc, {text, color, icon, sizing}) => {
-            if (!acc[text]) {
-              acc[text] = { text, color, icon, sizing: 0 };
-            }
-            acc[text].sizing += sizing;
-            return acc;
-          }, {}));
+          const result = Object.values(
+            categories.reduce((acc, { text, color, icon, sizing }) => {
+              if (!acc[text]) {
+                acc[text] = { text, color, icon, sizing: 0 };
+              }
+              acc[text].sizing += sizing;
+              return acc;
+            }, {})
+          );
           results[index] = {
             listName: list.name,
             totalPoints: totalSizeList,
@@ -168,6 +171,27 @@ window.TrelloPowerUp.initialize({
   },
 
   "card-buttons": async function (t, options) {
+    const completionStatusButton = await t.card('id')
+        .get('id')
+        .then(cardId => {
+            // Fetch the completion status from your backend
+            return fetch(`https://your-backend.com/api/card-status/${cardId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const buttonColor = data.isCompleted ? 'green' : 'red';
+                    const buttonText = data.isCompleted ? 'Completed' : 'Complete';
+
+                    return {
+                        icon: 'https://your-icon-url.com/icon.png',
+                        text: buttonText,
+                        color: buttonColor,
+                        callback: function (t) {
+                            // Logic to toggle the completion status
+                        },
+                        condition: 'edit'
+                    };
+                });
+        });
     return [
       {
         // icon is the URL to an image to be used as the button's icon.
@@ -193,6 +217,7 @@ window.TrelloPowerUp.initialize({
           });
         },
       },
+      completionStatusButton
     ];
   },
   "card-badges": function (t, options) {

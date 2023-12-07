@@ -175,9 +175,13 @@ window.TrelloPowerUp.initialize({
         .get('id')
         .then(cardId => {
             // Fetch the completion status from your backend
-            return fetch(`https://your-backend.com/api/card-status/${cardId}`)
-                .then(response => response.json())
+            return fetch(`${ENDPOINT_URL}/:${cardId}`, {method: "GET"})
+                .then(response => {
+              console.log("response", response)
+              return response.json()
+            })
                 .then(data => {
+                    console.log(data)
                     const buttonColor = data.isCompleted ? 'green' : 'red';
                     const buttonText = data.isCompleted ? 'Completed' : 'Complete';
 
@@ -193,30 +197,30 @@ window.TrelloPowerUp.initialize({
                 });
         });
     return [
-      {
-        // icon is the URL to an image to be used as the button's icon.
-        // The image should be 24x24 pixels.
-        icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
+//       {
+//         // icon is the URL to an image to be used as the button's icon.
+//         // The image should be 24x24 pixels.
+//         icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
 
-        // text is the name of the button.
-        text: "Estimate",
+//         // text is the name of the button.
+//         text: "Estimate",
 
-        // callback is a function that is called when the button is clicked.
-        callback: function (t) {
-          // Popup an iframe when the button is clicked.
-          // The iframe will load the URL provided and display it in a modal.
-          return t.popup({
-            // Title of the popup
-            title: "Sizing Details",
+//         // callback is a function that is called when the button is clicked.
+//         callback: function (t) {
+//           // Popup an iframe when the button is clicked.
+//           // The iframe will load the URL provided and display it in a modal.
+//           return t.popup({
+//             // Title of the popup
+//             title: "Sizing Details",
 
-            // URL of the page to load into the iframe
-            url: "./sizing.html",
+//             // URL of the page to load into the iframe
+//             url: "./sizing.html",
 
-            // Height of the popup in pixels
-            height: 184,
-          });
-        },
-      },
+//             // Height of the popup in pixels
+//             height: 184,
+//           });
+//         },
+//       },
       completionStatusButton
     ];
   },

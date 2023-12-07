@@ -175,7 +175,7 @@ window.TrelloPowerUp.initialize({
         .get('id')
         .then(cardId => {
             // Fetch the completion status from your backend
-            return fetch(`${ENDPOINT_URL}/:${cardId}`, {method: "GET"})
+            return fetch(`${ENDPOINT_URL}/cards/${cardId}`, {method: "GET"})
                 .then(response => {
               console.log("response", response)
               return response.json()
@@ -183,13 +183,17 @@ window.TrelloPowerUp.initialize({
                 .then(data => {
                     console.log(data)
                     const buttonColor = data.isCompleted ? 'green' : 'red';
-                    const buttonText = data.isCompleted ? 'Completed' : 'Complete';
+                    const buttonText = data.isCompleted ? 'Completed' : 'Mark as Completed';
 
                     return {
                         icon: 'https://your-icon-url.com/icon.png',
                         text: buttonText,
                         color: buttonColor,
                         callback: function (t) {
+                          fetch(`${ENDPOINT_URL}/cards/status`, {method: "POST", body: JSON.stringify({cardId, isCompleted: !data.isCompleted}).then(response => response.json()). then(data => {
+                            if(data.status === 200) {
+                }
+                          })
                             // Logic to toggle the completion status
                         },
                         condition: 'edit'

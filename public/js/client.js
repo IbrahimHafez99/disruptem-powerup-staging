@@ -171,61 +171,67 @@ window.TrelloPowerUp.initialize({
   },
 
   "card-buttons": async function (t, options) {
-    const completionStatusButton = await t.card('id')
-        .get('id')
-        .then(cardId => {
-            // Fetch the completion status from your backend
-            return fetch(`${ENDPOINT_URL}/cards/${cardId}`, {method: "GET"})
-                .then(response => {
-              console.log("response", response)
-              return response.json()
-            })
-                .then(data => {
-                    console.log(data)
-                    const buttonColor = data.isCompleted ? 'green' : 'red';
-                    const buttonText = data.isCompleted ? 'Completed' : 'Mark as Completed';
+    const completionStatusButton = await t
+      .card("id")
+      .get("id")
+      .then((cardId) => {
+        // Fetch the completion status from your backend
+        return fetch(`${ENDPOINT_URL}/cards/${cardId}`, { method: "GET" })
+          .then((response) => {
+            console.log("response", response);
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            const buttonColor = data.isCompleted ? "green" : "red";
+            const buttonText = data.isCompleted
+              ? "Completed"
+              : "Mark as Completed";
 
-                    return {
-                        icon: 'https://your-icon-url.com/icon.png',
-                        text: buttonText,
-                        color: buttonColor,
-                        callback: function (t) {
-                          fetch(`${ENDPOINT_URL}/cards/status`, {method: "POST", body: JSON.stringify({cardId, isCompleted: !data.isCompleted}).then(response => response.json()). then(data => {
-                            if(data.status === 200) {
-                }
-                          })
-                            // Logic to toggle the completion status
-                        },
-                        condition: 'edit'
-                    };
-                });
-        });
+            return {
+              icon: "https://your-icon-url.com/icon.png",
+              text: buttonText,
+              color: buttonColor,
+              callback: function (t) {
+                // Logic to toggle the completion status
+                return fetch(`${ENDPOINT_URL}/cards/status`, {
+                  method: "POST",
+                  body: JSON.stringify({
+                    cardId,
+                    isCompleted: !data.isCompleted,
+                  }),
+                }).then((response) => response.json());
+              },
+              condition: "edit",
+            };
+          });
+      });
     return [
-//       {
-//         // icon is the URL to an image to be used as the button's icon.
-//         // The image should be 24x24 pixels.
-//         icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
+            {
+              // icon is the URL to an image to be used as the button's icon.
+              // The image should be 24x24 pixels.
+              icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
 
-//         // text is the name of the button.
-//         text: "Estimate",
+              // text is the name of the button.
+              text: "Estimate",
 
-//         // callback is a function that is called when the button is clicked.
-//         callback: function (t) {
-//           // Popup an iframe when the button is clicked.
-//           // The iframe will load the URL provided and display it in a modal.
-//           return t.popup({
-//             // Title of the popup
-//             title: "Sizing Details",
+              // callback is a function that is called when the button is clicked.
+              callback: function (t) {
+                // Popup an iframe when the button is clicked.
+                // The iframe will load the URL provided and display it in a modal.
+                return t.popup({
+                  // Title of the popup
+                  title: "Sizing Details",
 
-//             // URL of the page to load into the iframe
-//             url: "./sizing.html",
+                  // URL of the page to load into the iframe
+                  url: "./sizing.html",
 
-//             // Height of the popup in pixels
-//             height: 184,
-//           });
-//         },
-//       },
-      completionStatusButton
+                  // Height of the popup in pixels
+                  height: 184,
+                });
+              },
+            },
+      completionStatusButton,
     ];
   },
   "card-badges": function (t, options) {

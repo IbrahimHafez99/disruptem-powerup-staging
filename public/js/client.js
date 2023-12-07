@@ -196,41 +196,50 @@ window.TrelloPowerUp.initialize({
                 // Logic to toggle the completion status
                 return fetch(`${ENDPOINT_URL}/cards/status`, {
                   method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
                   body: JSON.stringify({
                     cardId,
                     isCompleted: !data.isCompleted,
                   }),
-                }).then((response) => response.json());
+                }).then((response) => {
+                  if (response.ok) {
+                    // If API call is successful, trigger UI update
+                    t.render();
+                  }
+                  return response.json();
+                });
               },
               condition: "edit",
             };
           });
       });
     return [
-            {
-              // icon is the URL to an image to be used as the button's icon.
-              // The image should be 24x24 pixels.
-              icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
+      {
+        // icon is the URL to an image to be used as the button's icon.
+        // The image should be 24x24 pixels.
+        icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
 
-              // text is the name of the button.
-              text: "Estimate",
+        // text is the name of the button.
+        text: "Estimate",
 
-              // callback is a function that is called when the button is clicked.
-              callback: function (t) {
-                // Popup an iframe when the button is clicked.
-                // The iframe will load the URL provided and display it in a modal.
-                return t.popup({
-                  // Title of the popup
-                  title: "Sizing Details",
+        // callback is a function that is called when the button is clicked.
+        callback: function (t) {
+          // Popup an iframe when the button is clicked.
+          // The iframe will load the URL provided and display it in a modal.
+          return t.popup({
+            // Title of the popup
+            title: "Sizing Details",
 
-                  // URL of the page to load into the iframe
-                  url: "./sizing.html",
+            // URL of the page to load into the iframe
+            url: "./sizing.html",
 
-                  // Height of the popup in pixels
-                  height: 184,
-                });
-              },
-            },
+            // Height of the popup in pixels
+            height: 184,
+          });
+        },
+      },
       completionStatusButton,
     ];
   },

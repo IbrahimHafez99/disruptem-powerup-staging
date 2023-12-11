@@ -218,7 +218,8 @@ window.TrelloPowerUp.initialize({
               },
               condition: "edit",
             };
-          }).catch(error => console.log(error));
+          })
+          .catch((error) => console.log(error));
       });
     return [
       {
@@ -294,11 +295,18 @@ window.TrelloPowerUp.initialize({
                 },
                 []
               );
+              let completedBadge = {};
+              if (data.data.isCompleted === true) {
+                completedBadge = {
+                  text: `Completed`,
+                  color: "yellow",
+                };
+              }
               const badges = [...membersBadges, ...categoriesBadges];
-
+              const finalBadges = [...membersBadges, completedBadge]; // ...categoriesBadges] remove
               // Store the badge data in pluginData for future use
               return t.set("card", "shared", "badgeData", badges).then(() => {
-                return badges;
+                return finalBadges;
               });
             });
         });
@@ -451,8 +459,14 @@ window.TrelloPowerUp.initialize({
                   },
                   []
                 );
-
-                const detailBadges = [...membersBadges ]; //...categoriesBadges removed
+                let completedBadge = {};
+                if (data.data.isCompleted === true) {
+                  completedBadge = {
+                    text: `Completed`,
+                    color: "yellow",
+                  };
+                }
+                const detailBadges = [...membersBadges, completedBadge]; //...categoriesBadges removed
                 console.log("detailBadges", detailBadges);
 
                 // Store the badge data in pluginData for future use

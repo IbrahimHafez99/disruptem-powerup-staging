@@ -181,13 +181,17 @@ window.TrelloPowerUp.initialize({
             console.log("response", response);
             return response.json();
           })
-          .then( async (data) => {
-            console.log(data);
-          const isCompleted = await t.get('card', 'shared', 'isCompleted', data.isCompleted);
+          .then(async (response) => {
+            const data = response.data;
+            console.log("datadatadatadatadatadata", data);
+            const isCompleted = await t.get(
+              "card",
+              "shared",
+              "isCompleted",
+              data.isCompleted
+            );
             const buttonColor = isCompleted ? "green" : "red";
-            const buttonText = isCompleted
-              ? "Completed"
-              : "Mark as Completed";
+            const buttonText = isCompleted ? "Completed" : "Mark as Completed";
 
             return {
               icon: "https://your-icon-url.com/icon.png",
@@ -207,14 +211,14 @@ window.TrelloPowerUp.initialize({
                 }).then((response) => {
                   if (response.ok) {
                     // If API call is successful, trigger UI update
-                    t.set('card', 'shared', 'isCompleted', !data.isCompleted);
+                    t.set("card", "shared", "isCompleted", !data.isCompleted);
                   }
                   return response.json();
                 });
               },
               condition: "edit",
             };
-          });
+          }).catch(error => console.log(error));
       });
     return [
       {

@@ -206,12 +206,12 @@ window.TrelloPowerUp.initialize({
                   },
                   body: JSON.stringify({
                     cardId,
-                    isCompleted: !data.isCompleted,
+                    isCompleted: !isCompleted,
                   }),
                 }).then((response) => {
                   if (response.ok) {
                     // If API call is successful, trigger UI update
-                    t.set("card", "shared", "isCompleted", !data.isCompleted);
+                    t.set("card", "shared", "isCompleted", !isCompleted);
                   }
                   return response.json();
                 });
@@ -452,7 +452,7 @@ window.TrelloPowerUp.initialize({
                   []
                 );
 
-                const detailBadges = [...membersBadges, ...categoriesBadges];
+                const detailBadges = [...membersBadges ]; //...categoriesBadges removed
                 console.log("detailBadges", detailBadges);
 
                 // Store the badge data in pluginData for future use

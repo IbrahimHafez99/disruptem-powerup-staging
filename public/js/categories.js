@@ -86,7 +86,7 @@ $("#estimate").submit(async function (event) {
     };
     const dataTobeSent = 
           {
-      category: selectedCategoryId,
+      categoryId: selectedCategoryId,
       cardId: card.id,
       listId: list.id,
       boardId: board.id,

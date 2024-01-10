@@ -45,16 +45,15 @@ function fetchCategories() {
 
 //populate the categories into the UI
 function populateCategories(categories) {
-  t.get("card", "shared", "categories").then(function (categories = []) {
-    let cats = categories.map((ms) => ms._id);
-    console.log("categories", categories);
+  let cats = categories.map((ms) => ms._id);
+  console.log("categories", categories);
 
-    const categoriesList = $("#categories");
-    categoriesList.forEach(function (category) {
-      // Exclude members that have sizing data
-      const option = `<option value="${category._id}">${category.name}</option>`;
-      categoriesList.append(option);
-    });
+  const categoriesList = $("#categories");
+  categories.forEach(function (category) {
+    console.log("category", category);
+    // Exclude members that have sizing data
+    const option = `<option value="${category._id}">${category.name}</option>`;
+    categoriesList.append(option);
   });
 }
 
@@ -62,10 +61,9 @@ function populateCategories(categories) {
 $("#estimate").submit(async function (event) {
   event.preventDefault();
 
-  const selectedMemberId = $("#members").val();
-  const sizing = $("#estimation-size").val();
-  const selectedMemberName = $("#members option:selected").text();
-  if (!sizing || !selectedMemberName) {
+  const selectedCategoryId = $("#categories").val();
+  const selectedCategoryName = $("#categories option:selected").text();
+  if (!selectedCategoryName) {
     return;
   }
   try {
@@ -76,9 +74,9 @@ $("#estimate").submit(async function (event) {
 
     // Send the data to the backend
     const data = {
-      member: {
-        memberId: selectedMemberId,
-        sizing: sizing,
+      category: {
+        categoryId: selectedCategoryId,
+        categoryColor: sizing,
       },
       cardId: card.id,
       listId: list.id,

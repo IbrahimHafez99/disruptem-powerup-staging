@@ -61,7 +61,9 @@ function populateCategories(categories) {
 $("#estimate").submit(async function (event) {
   event.preventDefault();
 
-  const [selectedCategoryId, selectedCategoryColor] = $("#categories").val().split("-");
+  const [selectedCategoryId, selectedCategoryColor] = $("#categories")
+    .val()
+    .split("-");
   const selectedCategoryName = $("#categories option:selected").text();
   if (!selectedCategoryName) {
     return;
@@ -82,191 +84,198 @@ $("#estimate").submit(async function (event) {
       listId: list.id,
       boardId: board.id,
     };
-    console.log("OUTPUTTTTTTTTTTTTTTTT", data)
-      const response = await fetch(`${API_URL}/cards/`, {
+    const dataTobeSent = 
+          {
+      category: selectedCategoryId,
+      cardId: card.id,
+      listId: list.id,
+      boardId: board.id,
+    };
+    console.log("OUTPUTTTTTTTTTTTTTTTT", data);
+    const response = await fetch(`${API_URL}/cards/`, {
       // Replace '/your-endpoint' with your actual endpoint
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(dataTobeSent),
     });
 
-//     if (response.ok) {
-//       console.log("Success:", await response.json());
-//       t.get("card", "shared", "detailBadgeData").then(function (
-//         badgeData = []
-//       ) {
-//         console.log("before badgeData", JSON.stringify(badgeData));
-//         console.log(data.member.memberId);
-//         // Check if a badge with this ID already exists
-//         const existingBadgeIndex = badgeData.findIndex(
-//           (badge) =>
-//             badge.memberId === data.member.memberId &&
-//             badge.cardId === data.cardId
-//         );
-//         console.log("existingBadgeIndex", existingBadgeIndex);
-//         if (existingBadgeIndex >= 0) {
-//           console.log("UPDATEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-//           // Update the existing badge
-//           badgeData[existingBadgeIndex].text = data.member.sizing;
-//           badgeData[existingBadgeIndex].sizing = data.member.sizing;
-//           return t
-//             .set("card", "shared", "badgeData", badgeData)
-//             .then(() => t.closePopup());
-//         } else {
-//           console.log("CREATEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-//           fetch(`${API_URL}/members/member/${data.member.memberId}`, {
-//             method: "GET",
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//           })
-//             .then((response) => {
-//               console.log("Response Status:", response.status);
-//               if (response.ok) {
-//                 return response.json();
-//               } else {
-//                 throw new Error("Failed to fetch");
-//               }
-//             })
-//             .then((m) => {
-//               console.log("MEMBER", m);
-//               const member = m.data;
-//               const memberBadge = {
-//                 title: member.name,
-//                 text: data.member.sizing,
-//                 color: "red",
-//                 memberId: member._id,
-//                 cardId: data.cardId,
-//                 listId: data.listId,
-//                 callback: function (t) {
-//                   let outSideContext = t;
-//                   return outSideContext.popup({
-//                     title: "Adjust Member Sizing",
-//                     items: [
-//                       // {
-//                       //   text: "Member: " + member.memberId.name,
-//                       // },
-//                       // {
-//                       //   text: "Current Sizing: " + member.sizing,
-//                       //   callback: function (t) {
-//                       //     return t.popup({
-//                       //       url: "input",
-//                       //       title: "Adjust Sizing",
-//                       //       url: `../adjust-size.html?cardId=${cardId.id}&idList=${idList.id}&idBoard=${idBoard.id}&memberId=${member.memberId.id}&memberName=${member.memberId.name}&currentSizing=${member.sizing}`,
-//                       //     });
-//                       //   },
-//                       // },
-//                       {
-//                         text: "Delete Member",
-//                         callback: function (t) {
-//                           const data = {
-//                             memberId: member._id,
-//                             cardId: data.cardId,
-//                           };
-//                           fetch(`${API_URL}/cards/delete-member`, {
-//                             method: "POST", // Specifying the HTTP method
-//                             headers: {
-//                               "Content-Type": "application/json", // Setting the content type of the request
-//                             },
-//                             body: JSON.stringify(data), // Converting the data to a JSON string
-//                           })
-//                             .then((response) => response.json()) // Parsing the JSON response from the server
-//                             .then((data) => {
-//                               console.log("Success:", data);
-//                               return t
-//                                 .get("card", "shared", "detailBadgeData")
-//                                 .then(function (badgeData) {
-//                                   console.log(
-//                                     "badgeDatabadgeDatabadgeData",
-//                                     badgeData
-//                                   );
-//                                   if (!badgeData) return;
+    //     if (response.ok) {
+    //       console.log("Success:", await response.json());
+    //       t.get("card", "shared", "detailBadgeData").then(function (
+    //         badgeData = []
+    //       ) {
+    //         console.log("before badgeData", JSON.stringify(badgeData));
+    //         console.log(data.member.memberId);
+    //         // Check if a badge with this ID already exists
+    //         const existingBadgeIndex = badgeData.findIndex(
+    //           (badge) =>
+    //             badge.memberId === data.member.memberId &&
+    //             badge.cardId === data.cardId
+    //         );
+    //         console.log("existingBadgeIndex", existingBadgeIndex);
+    //         if (existingBadgeIndex >= 0) {
+    //           console.log("UPDATEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+    //           // Update the existing badge
+    //           badgeData[existingBadgeIndex].text = data.member.sizing;
+    //           badgeData[existingBadgeIndex].sizing = data.member.sizing;
+    //           return t
+    //             .set("card", "shared", "badgeData", badgeData)
+    //             .then(() => t.closePopup());
+    //         } else {
+    //           console.log("CREATEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+    //           fetch(`${API_URL}/members/member/${data.member.memberId}`, {
+    //             method: "GET",
+    //             headers: {
+    //               "Content-Type": "application/json",
+    //             },
+    //           })
+    //             .then((response) => {
+    //               console.log("Response Status:", response.status);
+    //               if (response.ok) {
+    //                 return response.json();
+    //               } else {
+    //                 throw new Error("Failed to fetch");
+    //               }
+    //             })
+    //             .then((m) => {
+    //               console.log("MEMBER", m);
+    //               const member = m.data;
+    //               const memberBadge = {
+    //                 title: member.name,
+    //                 text: data.member.sizing,
+    //                 color: "red",
+    //                 memberId: member._id,
+    //                 cardId: data.cardId,
+    //                 listId: data.listId,
+    //                 callback: function (t) {
+    //                   let outSideContext = t;
+    //                   return outSideContext.popup({
+    //                     title: "Adjust Member Sizing",
+    //                     items: [
+    //                       // {
+    //                       //   text: "Member: " + member.memberId.name,
+    //                       // },
+    //                       // {
+    //                       //   text: "Current Sizing: " + member.sizing,
+    //                       //   callback: function (t) {
+    //                       //     return t.popup({
+    //                       //       url: "input",
+    //                       //       title: "Adjust Sizing",
+    //                       //       url: `../adjust-size.html?cardId=${cardId.id}&idList=${idList.id}&idBoard=${idBoard.id}&memberId=${member.memberId.id}&memberName=${member.memberId.name}&currentSizing=${member.sizing}`,
+    //                       //     });
+    //                       //   },
+    //                       // },
+    //                       {
+    //                         text: "Delete Member",
+    //                         callback: function (t) {
+    //                           const data = {
+    //                             memberId: member._id,
+    //                             cardId: data.cardId,
+    //                           };
+    //                           fetch(`${API_URL}/cards/delete-member`, {
+    //                             method: "POST", // Specifying the HTTP method
+    //                             headers: {
+    //                               "Content-Type": "application/json", // Setting the content type of the request
+    //                             },
+    //                             body: JSON.stringify(data), // Converting the data to a JSON string
+    //                           })
+    //                             .then((response) => response.json()) // Parsing the JSON response from the server
+    //                             .then((data) => {
+    //                               console.log("Success:", data);
+    //                               return t
+    //                                 .get("card", "shared", "detailBadgeData")
+    //                                 .then(function (badgeData) {
+    //                                   console.log(
+    //                                     "badgeDatabadgeDatabadgeData",
+    //                                     badgeData
+    //                                   );
+    //                                   if (!badgeData) return;
 
-//                                   badgeData.forEach((badge) => {
-//                                     if (
-//                                       badge.memberId &&
-//                                       badge.memberId === data.memberId &&
-//                                       badge.cardId === data.cardId
-//                                     ) {
-//                                       console.log(badge.memberId, badge.cardId);
-//                                       badgeData = badgeData.filter(
-//                                         (b) =>
-//                                           b.memberId !== data.memberId &&
-//                                           b.cardId !== data.cardId
-//                                       );
-//                                     }
-//                                     if (
-//                                       badge.memberIds &&
-//                                       badge.memberIds.includes(data.memberId) &&
-//                                       badge.cardId === data.cardId
-//                                     ) {
-//                                       // Remove the member ID from the badge's memberIds array
-//                                       badge.memberIds = badge.memberIds.filter(
-//                                         (id) => id !== data.memberId
-//                                       );
+    //                                   badgeData.forEach((badge) => {
+    //                                     if (
+    //                                       badge.memberId &&
+    //                                       badge.memberId === data.memberId &&
+    //                                       badge.cardId === data.cardId
+    //                                     ) {
+    //                                       console.log(badge.memberId, badge.cardId);
+    //                                       badgeData = badgeData.filter(
+    //                                         (b) =>
+    //                                           b.memberId !== data.memberId &&
+    //                                           b.cardId !== data.cardId
+    //                                       );
+    //                                     }
+    //                                     if (
+    //                                       badge.memberIds &&
+    //                                       badge.memberIds.includes(data.memberId) &&
+    //                                       badge.cardId === data.cardId
+    //                                     ) {
+    //                                       // Remove the member ID from the badge's memberIds array
+    //                                       badge.memberIds = badge.memberIds.filter(
+    //                                         (id) => id !== data.memberId
+    //                                       );
 
-//                                       // If the memberIds array is now empty, remove the badge
-//                                       if (badge.memberIds.length === 0) {
-//                                         badgeData = badgeData.filter(
-//                                           (b) =>
-//                                             b.categoryId !== badge.categoryId &&
-//                                             b.cardId === data.cardId
-//                                         );
-//                                       }
-//                                     }
-//                                   });
-//                                   console.log("badgeData", badgeData);
-//                                   // Update pluginData with the updated badge data
-//                                   t.set(
-//                                     "card",
-//                                     "shared",
-//                                     "badgeData",
-//                                     badgeData
-//                                   );
-//                                 });
-//                             })
-//                             .catch((error) => {
-//                               console.error("Error:", error); // Handling errors
-//                             });
-//                         },
-//                       },
-//                     ],
-//                   });
-//                 },
-//               };
-//               badgeData.push(memberBadge);
-//               if (
-//                 !(
-//                   badgeData.findIndex(
-//                     (badge) =>
-//                       badge.categoryId === member.category._id &&
-//                       badge.cardId === data.cardId
-//                   ) >= 0
-//                 )
-//               ) {
-//                 const categoryBadge = {
-//                   cardId: data.cardId,
-//                   categoryId: member.category._id,
-//                   color: member.category.color,
-//                   memberIds: [member._id],
-//                   listId: data.listId,
-//                   text: member.category.name,
-//                 };
-//                 badgeData.push(categoryBadge);
-//               }
-//               return t
-//                 .set("card", "shared", "detailBadgeData", badgeData)
-//                 .then(() => t.closePopup());
-//             })
-//             .catch((error) => console.log("Error:", error));
-//         }
-//         console.log("after badgeData", JSON.stringify(badgeData));
-//       });
-//     } else {
-//       console.error("Server responded with status", response.status);
-//     }
+    //                                       // If the memberIds array is now empty, remove the badge
+    //                                       if (badge.memberIds.length === 0) {
+    //                                         badgeData = badgeData.filter(
+    //                                           (b) =>
+    //                                             b.categoryId !== badge.categoryId &&
+    //                                             b.cardId === data.cardId
+    //                                         );
+    //                                       }
+    //                                     }
+    //                                   });
+    //                                   console.log("badgeData", badgeData);
+    //                                   // Update pluginData with the updated badge data
+    //                                   t.set(
+    //                                     "card",
+    //                                     "shared",
+    //                                     "badgeData",
+    //                                     badgeData
+    //                                   );
+    //                                 });
+    //                             })
+    //                             .catch((error) => {
+    //                               console.error("Error:", error); // Handling errors
+    //                             });
+    //                         },
+    //                       },
+    //                     ],
+    //                   });
+    //                 },
+    //               };
+    //               badgeData.push(memberBadge);
+    //               if (
+    //                 !(
+    //                   badgeData.findIndex(
+    //                     (badge) =>
+    //                       badge.categoryId === member.category._id &&
+    //                       badge.cardId === data.cardId
+    //                   ) >= 0
+    //                 )
+    //               ) {
+    //                 const categoryBadge = {
+    //                   cardId: data.cardId,
+    //                   categoryId: member.category._id,
+    //                   color: member.category.color,
+    //                   memberIds: [member._id],
+    //                   listId: data.listId,
+    //                   text: member.category.name,
+    //                 };
+    //                 badgeData.push(categoryBadge);
+    //               }
+    //               return t
+    //                 .set("card", "shared", "detailBadgeData", badgeData)
+    //                 .then(() => t.closePopup());
+    //             })
+    //             .catch((error) => console.log("Error:", error));
+    //         }
+    //         console.log("after badgeData", JSON.stringify(badgeData));
+    //       });
+    //     } else {
+    //       console.error("Server responded with status", response.status);
+    //     }
   } catch (error) {
     console.error("Error:", error);
   }

@@ -31,10 +31,10 @@ $(document).ready(function () {
 //fetch members from backend
 function fetchMembers() {
   $.ajax({
-    url: `${API_URL}/public/trello/members`,
+    url: `${API_URL}/public/trello/categories`,
     type: "GET",
     success: function (data) {
-      console.log(data);
+      console.log("datadatadatadatadata", data);
       populateMembers(data.data.members);
     },
     error: function (error) {

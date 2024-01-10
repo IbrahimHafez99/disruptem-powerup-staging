@@ -246,6 +246,30 @@ window.TrelloPowerUp.initialize({
           });
         },
       },
+      {
+        // icon is the URL to an image to be used as the button's icon.
+        // The image should be 24x24 pixels.
+        icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
+
+        // text is the name of the button.
+        text: "Category",
+
+        // callback is a function that is called when the button is clicked.
+        callback: function (t) {
+          // Popup an iframe when the button is clicked.
+          // The iframe will load the URL provided and display it in a modal.
+          return t.popup({
+            // Title of the popup
+            title: "Add Category",
+
+            // URL of the page to load into the iframe
+            url: "./category.html",
+
+            // Height of the popup in pixels
+            height: 184,
+          });
+        },
+      },
       completionStatusButton,
     ];
   },

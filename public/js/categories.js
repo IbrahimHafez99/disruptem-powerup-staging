@@ -23,19 +23,19 @@ var DISRUPTEM_ICON3 =
 
 var t = window.TrelloPowerUp.iframe();
 
-//call the function fetchMembers on UI form load
+//call the function fetchCategories on UI form load
 $(document).ready(function () {
-  fetchMembers();
+  fetchCategories();
 });
 
 //fetch members from backend
-function fetchMembers() {
+function fetchCategories() {
   $.ajax({
     url: `${API_URL}/public/trello/categories`,
     type: "GET",
     success: function (data) {
-      console.log("datadatadatadatadata", data);
-      populateMembers(data.data.members);
+      console.log("datadatadatadatadata", data.data.categories);
+      populateCategories(data.data.categories);
     },
     error: function (error) {
       console.error("Error fetching members", error);
@@ -43,22 +43,17 @@ function fetchMembers() {
   });
 }
 
-//populate the members into the UI
-function populateMembers(members) {
-  t.get("card", "shared", "memberSizing").then(function (memberSizing = []) {
-    // memberSizing now contains the sizing data for members
-    console.log(members);
-    let memberIdsWithSizing = members.map((ms) => ms._id);
-    console.log("memberIdsWithSizing", memberIdsWithSizing);
+//populate the categories into the UI
+function populateCategories(categories) {
+  t.get("card", "shared", "categories").then(function (categories = []) {
+    let cats = categories.map((ms) => ms._id);
+    console.log("categories", categories);
 
-    const membersList = $("#members");
-    members.forEach(function (member) {
+    const categoriesList = $("#categories");
+    categoriesList.forEach(function (category) {
       // Exclude members that have sizing data
-      console.log(member.id);
-      if (!memberIdsWithSizing.includes(String(member.id))) {
-        const option = `<option value="${member._id}">${member.name}</option>`;
-        membersList.append(option);
-      }
+      const option = `<option value="${category._id}">${category.name}</option>`;
+      categoriesList.append(option);
     });
   });
 }
@@ -118,7 +113,9 @@ $("#estimate").submit(async function (event) {
           // Update the existing badge
           badgeData[existingBadgeIndex].text = data.member.sizing;
           badgeData[existingBadgeIndex].sizing = data.member.sizing;
-          return t.set("card", "shared", "badgeData", badgeData).then(() => t.closePopup());
+          return t
+            .set("card", "shared", "badgeData", badgeData)
+            .then(() => t.closePopup());
         } else {
           console.log("CREATEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
           fetch(`${API_URL}/members/member/${data.member.memberId}`, {

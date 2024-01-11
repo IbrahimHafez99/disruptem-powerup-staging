@@ -295,7 +295,7 @@ window.TrelloPowerUp.initialize({
                   listId: data.data.listId,
                 };
               });
-
+              console.log(data.data.categories)
               const categoriesBadges = data.data.members.reduce(
                 (acc, member) => {
                   const category = member.memberId.category;
@@ -319,18 +319,10 @@ window.TrelloPowerUp.initialize({
                 },
                 []
               );
-              let completedBadge = {};
-              if (data.data.isCompleted === true) {
-                completedBadge = {
-                  text: `Completed`,
-                  color: "yellow",
-                };
-              }
               const badges = [...membersBadges, ...categoriesBadges];
-              const finalBadges = [...membersBadges, completedBadge]; // ...categoriesBadges] remove
               // Store the badge data in pluginData for future use
               return t.set("card", "shared", "badgeData", badges).then(() => {
-                return finalBadges;
+                return badges;
               });
             });
         });

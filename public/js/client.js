@@ -296,29 +296,14 @@ window.TrelloPowerUp.initialize({
                 };
               });
               console.log(data.data.categories)
-              const categoriesBadges = data.data.members.reduce(
-                (acc, member) => {
-                  const category = member.memberId.category;
-                  const existingCategoryBadge = acc.find(
-                    (badge) => badge.categoryId === category.id
-                  );
-                  if (existingCategoryBadge) {
-                    existingCategoryBadge.memberIds.push(member.memberId._id);
-                  } else {
-                    acc.push({
+              const categoriesBadges = data.data.categories.map(category => ({
                       text: category.name,
                       color: category.color,
                       icon: category.icon,
                       categoryId: category.id,
-                      memberIds: [member.memberId._id],
                       cardId: cardId,
                       listId: data.data.listId,
-                    });
-                  }
-                  return acc;
-                },
-                []
-              );
+                    }))
               const badges = [...membersBadges, ...categoriesBadges];
               // Store the badge data in pluginData for future use
               return t.set("card", "shared", "badgeData", badges).then(() => {

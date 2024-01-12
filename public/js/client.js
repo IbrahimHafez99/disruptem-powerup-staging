@@ -171,56 +171,6 @@ window.TrelloPowerUp.initialize({
   },
 
   "card-buttons": async function (t, options) {
-    const completionStatusButton = await t
-      .card("id")
-      .get("id")
-      .then((cardId) => {
-        // Fetch the completion status from your backend
-        return fetch(`${ENDPOINT_URL}/cards/${cardId}`, { method: "GET" })
-          .then((response) => {
-            console.log("response", response);
-            return response.json();
-          })
-          .then(async (response) => {
-            const data = response.data;
-            console.log("datadatadatadatadatadata", data);
-            const isCompleted = await t.get(
-              "card",
-              "shared",
-              "isCompleted",
-              data.isCompleted
-            );
-            const buttonColor = isCompleted ? "green" : "red";
-            const buttonText = isCompleted ? "Completed" : "Mark as Completed";
-
-            return {
-              icon: "https://your-icon-url.com/icon.png",
-              text: buttonText,
-              color: buttonColor,
-              callback: function (t) {
-                // Logic to toggle the completion status
-                return fetch(`${ENDPOINT_URL}/cards/status`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    cardId,
-                    isCompleted: !isCompleted,
-                  }),
-                }).then((response) => {
-                  if (response.ok) {
-                    // If API call is successful, trigger UI update
-                    t.set("card", "shared", "isCompleted", !isCompleted);
-                  }
-                  return response.json();
-                });
-              },
-              condition: "edit",
-            };
-          })
-          .catch((error) => console.log(error));
-      });
     return [
       {
         // icon is the URL to an image to be used as the button's icon.
@@ -270,7 +220,6 @@ window.TrelloPowerUp.initialize({
           });
         },
       },
-      completionStatusButton,
     ];
   },
   "card-badges": function (t, options) {
@@ -324,6 +273,7 @@ window.TrelloPowerUp.initialize({
             return fetch(`${ENDPOINT_URL}/cards/${cardId}`)
               .then((response) => response.json())
               .then((data) => {
+              console.log("datadatadatadatadata", data)
                 const membersBadges = data.data.members.map((member) => {
                   const badge = {
                     title: member.memberId.name,
@@ -460,14 +410,7 @@ window.TrelloPowerUp.initialize({
                   },
                   []
                 );
-                let completedBadge = {};
-                if (data.data.isCompleted === true) {
-                  completedBadge = {
-                    text: `Completed`,
-                    color: "yellow",
-                  };
-                }
-                const detailBadges = [...membersBadges, completedBadge]; //...categoriesBadges removed
+                const detailBadges = [...membersBadges]; //...categoriesBadges removed
                 console.log("detailBadges", detailBadges);
 
                 // Store the badge data in pluginData for future use

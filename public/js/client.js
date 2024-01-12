@@ -244,15 +244,15 @@ window.TrelloPowerUp.initialize({
                   listId: data.data.listId,
                 };
               });
-              console.log(data.data.categories)
-              const categoriesBadges = data.data.categories.map(category => ({
-                      text: category.name,
-                      color: category.color,
-                      icon: category.icon,
-                      categoryId: category.id,
-                      cardId: cardId,
-                      listId: data.data.listId,
-                    }))
+              console.log(data.data.categories);
+              const categoriesBadges = data.data.categories.map((category) => ({
+                text: category.name,
+                color: category.color,
+                icon: category.icon,
+                categoryId: category.id,
+                cardId: cardId,
+                listId: data.data.listId,
+              }));
               const badges = [...membersBadges, ...categoriesBadges];
               // Store the badge data in pluginData for future use
               return t.set("card", "shared", "badgeData", badges).then(() => {
@@ -273,7 +273,7 @@ window.TrelloPowerUp.initialize({
             return fetch(`${ENDPOINT_URL}/cards/${cardId}`)
               .then((response) => response.json())
               .then((data) => {
-              console.log("datadatadatadatadata", data)
+                console.log("datadatadatadatadata", data);
                 const membersBadges = data.data.members.map((member) => {
                   const badge = {
                     title: member.memberId.name,
@@ -386,31 +386,17 @@ window.TrelloPowerUp.initialize({
                   return badge;
                 });
 
-                const categoriesBadges = data.data.members.reduce(
-                  (acc, member) => {
-                    const category = member.memberId.category;
-                    const existingCategoryBadge = acc.find(
-                      (badge) => badge.categoryId === category.id
-                    );
-
-                    if (existingCategoryBadge) {
-                      existingCategoryBadge.memberIds.push(member.memberId._id);
-                    } else {
-                      acc.push({
-                        text: category.name,
-                        color: category.color,
-                        icon: category.icon, // Only if categories have icons
-                        categoryId: category.id,
-                        memberIds: [member.memberId._id],
-                        cardId: cardId,
-                        listId: data.data.listId,
-                      });
-                    }
-                    return acc;
-                  },
-                  []
+                const categoriesBadges = data.data.categories.map(
+                  (category) => ({
+                    text: category.name,
+                    color: category.color,
+                    icon: category.icon,
+                    categoryId: category.id,
+                    cardId: cardId,
+                    listId: data.data.listId,
+                  })
                 );
-                const detailBadges = [...membersBadges]; //...categoriesBadges removed
+                const detailBadges = [...membersBadges, ...categoriesBadges]; //...categoriesBadges removed
                 console.log("detailBadges", detailBadges);
 
                 // Store the badge data in pluginData for future use

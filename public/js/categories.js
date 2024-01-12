@@ -79,14 +79,12 @@ $("#estimate").submit(async function (event) {
       category: {
         categoryId: selectedCategoryId,
         categoryColor: selectedCategoryColor,
-        
       },
       cardId: card.id,
       listId: list.id,
       boardId: board.id,
     };
-    const dataTobeSent = 
-          {
+    const dataTobeSent = {
       categoryId: selectedCategoryId,
       cardId: card.id,
       listId: list.id,
@@ -102,9 +100,11 @@ $("#estimate").submit(async function (event) {
       body: JSON.stringify(dataTobeSent),
     });
 
-        if (response.ok) {
-      const badgeData = await t.get("card", "shared", "badgeData") || [];
-      const categoryExists = badgeData.some(badge => badge.categoryId === selectedCategoryId);
+    if (response.ok) {
+      const badgeData = (await t.get("card", "shared", "badgeData")) || [];
+      const categoryExists = badgeData.some(
+        (badge) => badge.categoryId === selectedCategoryId
+      );
 
       if (!categoryExists) {
         const newCategoryBadge = {
@@ -117,7 +117,7 @@ $("#estimate").submit(async function (event) {
         badgeData.push(newCategoryBadge);
         await t.set("card", "shared", "badgeData", badgeData);
       }
-      
+
       t.closePopup();
     } else {
       console.error("Error updating card:", response.statusText);

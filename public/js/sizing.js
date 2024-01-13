@@ -251,14 +251,15 @@ $("#estimate").submit(async function (event) {
                   ) >= 0
                 )
               ) {
-                const categoryBadge = {
+                console.log("membermembermembermembermember", member)
+                
+                const categoryBadge = member.defaultCategories.map(category => ({
                   cardId: data.cardId,
-                  categoryId: member.category._id,
-                  color: member.category.color,
-                  memberIds: [member._id],
+                  categoryId: category._id,
+                  color: category.color,
                   listId: data.listId,
                   text: member.category.name,
-                };
+                }))
                 badgeData.push(categoryBadge);
               }
               return t

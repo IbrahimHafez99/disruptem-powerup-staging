@@ -394,7 +394,36 @@ window.TrelloPowerUp.initialize({
                     categoryId: category.id,
                     cardId: cardId,
                     listId: data.data.listId,
-                    
+                    callback: function (t) {
+                      // Logic to handle category deletion
+                      const deleteData = {
+                        categoryId: category.id,
+                        cardId: cardId,
+                      };
+                      fetch(`${ENDPOINT_URL}/cards/delete-category`, {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(deleteData),
+                      })
+                        .then((response) => response.json())
+                        .then((responseData) => {
+                          // Remove the category from the badgeData
+                          const updatedDetailBadges = detailBadgeData.filter(
+                            (badge) => badge.categoryId !== category.id
+                          );
+                          return t.set(
+                            "card",
+                            "shared",
+                            "detailBadgeData",
+                            updatedDetailBadges
+                          );
+                        })
+                        .catch((error) => {
+                          console.error("Error deleting category:", error);
+                        });
+                    },
                   })
                 );
                 const detailBadges = [...membersBadges, ...categoriesBadges]; //...categoriesBadges removed

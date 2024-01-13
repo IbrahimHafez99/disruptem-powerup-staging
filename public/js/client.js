@@ -400,6 +400,7 @@ window.TrelloPowerUp.initialize({
                         categoryId: category.id,
                         cardId: cardId,
                       };
+                      console.log("deleteData", deleteData)
                       fetch(`${ENDPOINT_URL}/cards/delete-category`, {
                         method: "POST",
                         headers: {

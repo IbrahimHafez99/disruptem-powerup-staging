@@ -394,6 +394,7 @@ window.TrelloPowerUp.initialize({
                     categoryId: category.id,
                     cardId: cardId,
                     listId: data.data.listId,
+                    
                   })
                 );
                 const detailBadges = [...membersBadges, ...categoriesBadges]; //...categoriesBadges removed

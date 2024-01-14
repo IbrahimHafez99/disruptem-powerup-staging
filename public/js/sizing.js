@@ -118,7 +118,9 @@ $("#estimate").submit(async function (event) {
           // Update the existing badge
           badgeData[existingBadgeIndex].text = data.member.sizing;
           badgeData[existingBadgeIndex].sizing = data.member.sizing;
-          return t.set("card", "shared", "badgeData", badgeData).then(() => t.closePopup());
+          return t
+            .set("card", "shared", "badgeData", badgeData)
+            .then(() => t.closePopup());
         } else {
           console.log("CREATEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
           fetch(`${API_URL}/members/member/${data.member.memberId}`, {
@@ -251,15 +253,17 @@ $("#estimate").submit(async function (event) {
                   ) >= 0
                 )
               ) {
-                console.log("membermembermembermembermember", member)
-                
-                const categoryBadge = member.defaultCategories.map(category => ({
-                  cardId: data.cardId,
-                  categoryId: category._id,
-                  color: category.color,
-                  listId: data.listId,
-                  text: member.category.name,
-                }))
+                console.log("membermembermembermembermember", member);
+
+                const categoryBadge = member.defaultCategories.map(
+                  (category) => ({
+                    cardId: data.cardId,
+                    categoryId: category._id,
+                    color: category.color,
+                    listId: data.listId,
+                    text: member.category.name,
+                  })
+                );
                 badgeData.push(categoryBadge);
               }
               return t

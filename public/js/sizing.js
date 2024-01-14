@@ -248,7 +248,7 @@ $("#estimate").submit(async function (event) {
                 !(
                   badgeData.findIndex(
                     (badge) =>
-                      badge.categoryId === member.category._id &&
+                      badge.categoryId === member.category?.id &&
                       badge.cardId === data.cardId
                   ) >= 0
                 )
@@ -258,7 +258,7 @@ $("#estimate").submit(async function (event) {
                 const categoryBadge = member.defaultCategories.map(
                   (category) => ({
                     cardId: data.cardId,
-                    categoryId: category._id,
+                    categoryId: category.id,
                     color: category.color,
                     listId: data.listId,
                     text: member.category.name,

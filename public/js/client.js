@@ -277,7 +277,14 @@ window.TrelloPowerUp.initialize({
                 cardId: cardId,
                 listId: data.data.listId,
               }));
-              const badges = [...membersBadges, ...categoriesBadges];
+              const typesBadges = data.data.types.map((type) => ({
+                text: type.name,
+                color: type.color,
+                typeId: type.id,
+                cardId: cardId,
+                listId: data.data.listId,
+              }));
+              const badges = [...membersBadges, ...categoriesBadges, ...typesBadges];
               // Store the badge data in pluginData for future use
               return t.set("card", "shared", "badgeData", badges).then(() => {
                 return badges;
@@ -424,7 +431,7 @@ window.TrelloPowerUp.initialize({
                         categoryId: category.id,
                         cardId: cardId,
                       };
-                      console.log("deleteData", deleteData)
+                      console.log("deleteData", deleteData);
                       fetch(`${ENDPOINT_URL}/cards/delete-category`, {
                         method: "POST",
                         headers: {

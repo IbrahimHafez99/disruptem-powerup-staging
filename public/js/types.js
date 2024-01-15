@@ -23,7 +23,7 @@ var DISRUPTEM_ICON3 =
 
 var t = window.TrelloPowerUp.iframe();
 
-//call the function fetchCategories on UI form load
+//call the function fetchTypes on UI form load
 $(document).ready(function () {
   fetchTypes();
 });
@@ -60,10 +60,10 @@ function populateTypes(types) {
 $("#estimate").submit(async function (event) {
   event.preventDefault();
 
-  const [selectedTypeId, selectedTypeColor] = $("#categories")
+  const [selectedTypeId, selectedTypeColor] = $("#types")
     .val()
     .split("-");
-  const selectedTypeName = $("#categories option:selected").text();
+  const selectedTypeName = $("#types option:selected").text();
   if (!selectedTypeName) {
     return;
   }
@@ -75,10 +75,10 @@ $("#estimate").submit(async function (event) {
 
     // Send the data to the backend
     const data = {
-      category: {
+      type: {
         typeId: selectedTypeId,
         typeColor: selectedTypeColor,
-        
+        typeName: selectedTypeName,
       },
       cardId: card.id,
       listId: list.id,
@@ -111,7 +111,7 @@ $("#estimate").submit(async function (event) {
           cardId: card.id,
           typeId: selectedTypeId,
           color: selectedTypeColor,
-          text: $("#categories option:selected").text(),
+          text: $("#types option:selected").text(),
         };
 
         badgeData.push(newTypeBadge);

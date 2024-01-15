@@ -79,6 +79,7 @@ $("#estimate").submit(async function (event) {
       category: {
         categoryId: selectedCategoryId,
         categoryColor: selectedCategoryColor,
+        categoryName: selectedCategoryName,
       },
       cardId: card.id,
       listId: list.id,

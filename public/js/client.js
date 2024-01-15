@@ -284,7 +284,11 @@ window.TrelloPowerUp.initialize({
                 cardId: cardId,
                 listId: data.data.listId,
               }));
-              const badges = [...membersBadges, ...categoriesBadges, ...typesBadges];
+              const badges = [
+                ...membersBadges,
+                ...categoriesBadges,
+                ...typesBadges,
+              ];
               // Store the badge data in pluginData for future use
               return t.set("card", "shared", "badgeData", badges).then(() => {
                 return badges;
@@ -458,48 +462,50 @@ window.TrelloPowerUp.initialize({
                     },
                   })
                 );
-              const typesBadges = data.data.types.map(
-                  (type) => ({
-                    text: type.name,
-                    color: type.color,
-                    icon: type.icon,
-                    typeId: type.id,
-                    cardId: cardId,
-                    listId: data.data.listId,
-                    callback: function (t) {
-                      // Logic to handle type deletion
-                      const deleteData = {
-                        typeId: type.id,
-                        cardId: cardId,
-                      };
-                      console.log("deleteData", deleteData);
-                      fetch(`${ENDPOINT_URL}/cards/delete-type`, {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(deleteData),
+                const typesBadges = data.data.types.map((type) => ({
+                  text: type.name,
+                  color: type.color,
+                  icon: type.icon,
+                  typeId: type.id,
+                  cardId: cardId,
+                  listId: data.data.listId,
+                  callback: function (t) {
+                    // Logic to handle type deletion
+                    const deleteData = {
+                      typeId: type.id,
+                      cardId: cardId,
+                    };
+                    console.log("deleteData", deleteData);
+                    fetch(`${ENDPOINT_URL}/cards/delete-type`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(deleteData),
+                    })
+                      .then((response) => response.json())
+                      .then((responseData) => {
+                        // Remove the type from the badgeData
+                        const updatedDetailBadges = detailBadgeData.filter(
+                          (badge) => badge.typeId !== type.id
+                        );
+                        return t.set(
+                          "card",
+                          "shared",
+                          "detailBadgeData",
+                          updatedDetailBadges
+                        );
                       })
-                        .then((response) => response.json())
-                        .then((responseData) => {
-                          // Remove the type from the badgeData
-                          const updatedDetailBadges = detailBadgeData.filter(
-                            (badge) => badge.typeId !== type.id
-                          );
-                          return t.set(
-                            "card",
-                            "shared",
-                            "detailBadgeData",
-                            updatedDetailBadges
-                          );
-                        })
-                        .catch((error) => {
-                          console.error("Error deleting type:", error);
-                        });
-                    },
-                  })
-                );
-                const detailBadges = [...membersBadges, ...categoriesBadges, ...typesBadges]; //...categoriesBadges removed
+                      .catch((error) => {
+                        console.error("Error deleting type:", error);
+                      });
+                  },
+                }));
+                const detailBadges = [
+                  ...membersBadges,
+                  ...categoriesBadges,
+                  ...typesBadges,
+                ]; //...categoriesBadges removed
                 console.log("detailBadges", detailBadges);
 
                 // Store the badge data in pluginData for future use

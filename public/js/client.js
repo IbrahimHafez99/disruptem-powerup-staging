@@ -71,7 +71,7 @@ function onBtnClickTwo(t) {
             .get(card.id, "shared", "badgeData")
             .then(function (badgeData) {
               let totalSizeCard = 0;
-              console.log(`badgeDatra_${index}`, badgeData);
+              console.log(`Card_badgeData_${index}`, badgeData);
               if (badgeData) {
                 totalSizeCard = badgeData.reduce((acc, element) => {
                   if (
@@ -161,7 +161,19 @@ window.TrelloPowerUp.initialize({
           dark: UXPERTS_ICON,
           light: UXPERTS_ICON,
         },
-        text: "Report",
+        text: "Categories Report",
+        condition: "always",
+        callback: function (t) {
+          return onBtnClickTwo(t);
+        },
+      },
+      {
+        // we can either provide a button that has a callback function
+        icon: {
+          dark: UXPERTS_ICON,
+          light: UXPERTS_ICON,
+        },
+        text: "Type Report",
         condition: "always",
         callback: function (t) {
           return onBtnClickTwo(t);

@@ -1,13 +1,12 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css" />
-    
 
     <style>
       select {
         height: 30px;
       }
-      
+
       .select-members {
         display: flex;
         flex-direction: column;
@@ -18,19 +17,25 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
-
   </head>
   <body>
     <form id="estimate">
       <label for="estimation-size">Estimate:</label>
       <!--       <input type ="text" id="resourceLabel"> -->
-      <input type="number" step="any" id="estimation-size" placeholder="Sizing" />
+      <input
+        type="number"
+        step="any"
+        id="estimation-size"
+        placeholder="Sizing"
+      />
       <div class="select-members">
         <label for="members">Choose a member:</label>
-        <select name="members" id="members">
-        </select>
+        <select name="members" id="members"></select>
       </div>
-
+      <div class="select-categories">
+        <label for="categories">Choose a category:</label>
+        <select name="categories" id="categories"></select>
+      </div>
       <button type="submit" class="mod-primary">Save</button>
 
       <script src="./js/sizing.js"></script>

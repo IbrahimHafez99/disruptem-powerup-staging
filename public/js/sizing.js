@@ -26,7 +26,37 @@ var t = window.TrelloPowerUp.iframe();
 //call the function fetchMembers on UI form load
 $(document).ready(function () {
   fetchMembers();
+  fetchCategories();
 });
+
+//fetch members from backend
+function fetchCategories() {
+  $.ajax({
+    url: `${API_URL}/public/trello/categories`,
+    type: "GET",
+    success: function (data) {
+      console.log("datadatadatadatadata", data.data.categories);
+      populateCategories(data.data.categories);
+    },
+    error: function (error) {
+      console.error("Error fetching members", error);
+    },
+  });
+}
+
+//populate the categories into the UI
+function populateCategories(categories) {
+  let cats = categories.map((ms) => ms._id);
+  console.log("categories", categories);
+
+  const categoriesList = $("#categories");
+  categories.forEach(function (category) {
+    console.log("category", category);
+    // Exclude members that have sizing data
+    const option = `<option value="${category._id}-${category.color}">${category.name}</option>`;
+    categoriesList.append(option);
+  });
+}
 
 //fetch members from backend
 function fetchMembers() {

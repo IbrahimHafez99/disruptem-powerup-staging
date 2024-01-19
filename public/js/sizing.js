@@ -132,7 +132,114 @@ $("#estimate").submit(async function (event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }).then();
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("dataaaaaaaaa", data);
+        t.get("card", "shared", "detailBadgeData").then(function (
+          badgeData = []
+        ) {
+          const memberBadge = {
+            title: member.name,
+            text: data.member.sizing,
+            color: "red",
+            memberId: member._id,
+            cardId: data.cardId,
+            listId: data.listId,
+            callback: function (t) {
+              let outSideContext = t;
+              return outSideContext.popup({
+                title: "Adjust Member Sizing",
+                items: [
+                  // {
+                  //   text: "Member: " + member.memberId.name,
+                  // },
+                  // {
+                  //   text: "Current Sizing: " + member.sizing,
+                  //   callback: function (t) {
+                  //     return t.popup({
+                  //       url: "input",
+                  //       title: "Adjust Sizing",
+                  //       url: `../adjust-size.html?cardId=${cardId.id}&idList=${idList.id}&idBoard=${idBoard.id}&memberId=${member.memberId.id}&memberName=${member.memberId.name}&currentSizing=${member.sizing}`,
+                  //     });
+                  //   },
+                  // },
+                  {
+                    text: "Delete Member",
+                    callback: function (t) {
+                      const data = {
+                        memberId: member._id,
+                        cardId: data.cardId,
+                      };
+                      fetch(`${API_URL}/cards/delete-member`, {
+                        method: "POST", // Specifying the HTTP method
+                        headers: {
+                          "Content-Type": "application/json", // Setting the content type of the request
+                        },
+                        body: JSON.stringify(data), // Converting the data to a JSON string
+                      })
+                        .then((response) => response.json()) // Parsing the JSON response from the server
+                        .then((data) => {
+                          console.log("Success:", data);
+                          return t
+                            .get("card", "shared", "detailBadgeData")
+                            .then(function (badgeData) {
+                              console.log(
+                                "badgeDatabadgeDatabadgeData",
+                                badgeData
+                              );
+                              if (!badgeData) return;
+
+                              badgeData.forEach((badge) => {
+                                if (
+                                  badge.memberId &&
+                                  badge.memberId === data.memberId &&
+                                  badge.cardId === data.cardId
+                                ) {
+                                  console.log(badge.memberId, badge.cardId);
+                                  badgeData = badgeData.filter(
+                                    (b) =>
+                                      b.memberId !== data.memberId &&
+                                      b.cardId !== data.cardId
+                                  );
+                                }
+                                if (
+                                  badge.memberIds &&
+                                  badge.memberIds.includes(data.memberId) &&
+                                  badge.cardId === data.cardId
+                                ) {
+                                  // Remove the member ID from the badge's memberIds array
+                                  badge.memberIds = badge.memberIds.filter(
+                                    (id) => id !== data.memberId
+                                  );
+
+                                  // If the memberIds array is now empty, remove the badge
+                                  if (badge.memberIds.length === 0) {
+                                    badgeData = badgeData.filter(
+                                      (b) =>
+                                        b.categoryId !== badge.categoryId &&
+                                        b.cardId === data.cardId
+                                    );
+                                  }
+                                }
+                              });
+                              console.log("badgeData", badgeData);
+                              // Update pluginData with the updated badge data
+                              t.set("card", "shared", "badgeData", badgeData);
+                            });
+                        })
+                        .catch((error) => {
+                          console.error("Error:", error); // Handling errors
+                        });
+                    },
+                  },
+                ],
+              });
+            },
+          };
+          badgeData.push(memberBadge);
+        });
+      });
 
     if (response.ok) {
       console.log("Success:", await response.json());
@@ -158,105 +265,7 @@ $("#estimate").submit(async function (event) {
           .then((m) => {
             console.log("MEMBER", m);
             const member = m.data;
-            const memberBadge = {
-              title: member.name,
-              text: data.member.sizing,
-              color: "red",
-              memberId: member._id,
-              cardId: data.cardId,
-              listId: data.listId,
-              callback: function (t) {
-                let outSideContext = t;
-                return outSideContext.popup({
-                  title: "Adjust Member Sizing",
-                  items: [
-                    // {
-                    //   text: "Member: " + member.memberId.name,
-                    // },
-                    // {
-                    //   text: "Current Sizing: " + member.sizing,
-                    //   callback: function (t) {
-                    //     return t.popup({
-                    //       url: "input",
-                    //       title: "Adjust Sizing",
-                    //       url: `../adjust-size.html?cardId=${cardId.id}&idList=${idList.id}&idBoard=${idBoard.id}&memberId=${member.memberId.id}&memberName=${member.memberId.name}&currentSizing=${member.sizing}`,
-                    //     });
-                    //   },
-                    // },
-                    {
-                      text: "Delete Member",
-                      callback: function (t) {
-                        const data = {
-                          memberId: member._id,
-                          cardId: data.cardId,
-                        };
-                        fetch(`${API_URL}/cards/delete-member`, {
-                          method: "POST", // Specifying the HTTP method
-                          headers: {
-                            "Content-Type": "application/json", // Setting the content type of the request
-                          },
-                          body: JSON.stringify(data), // Converting the data to a JSON string
-                        })
-                          .then((response) => response.json()) // Parsing the JSON response from the server
-                          .then((data) => {
-                            console.log("Success:", data);
-                            return t
-                              .get("card", "shared", "detailBadgeData")
-                              .then(function (badgeData) {
-                                console.log(
-                                  "badgeDatabadgeDatabadgeData",
-                                  badgeData
-                                );
-                                if (!badgeData) return;
 
-                                badgeData.forEach((badge) => {
-                                  if (
-                                    badge.memberId &&
-                                    badge.memberId === data.memberId &&
-                                    badge.cardId === data.cardId
-                                  ) {
-                                    console.log(badge.memberId, badge.cardId);
-                                    badgeData = badgeData.filter(
-                                      (b) =>
-                                        b.memberId !== data.memberId &&
-                                        b.cardId !== data.cardId
-                                    );
-                                  }
-                                  if (
-                                    badge.memberIds &&
-                                    badge.memberIds.includes(data.memberId) &&
-                                    badge.cardId === data.cardId
-                                  ) {
-                                    // Remove the member ID from the badge's memberIds array
-                                    badge.memberIds = badge.memberIds.filter(
-                                      (id) => id !== data.memberId
-                                    );
-
-                                    // If the memberIds array is now empty, remove the badge
-                                    if (badge.memberIds.length === 0) {
-                                      badgeData = badgeData.filter(
-                                        (b) =>
-                                          b.categoryId !== badge.categoryId &&
-                                          b.cardId === data.cardId
-                                      );
-                                    }
-                                  }
-                                });
-                                console.log("badgeData", badgeData);
-                                // Update pluginData with the updated badge data
-                                t.set("card", "shared", "badgeData", badgeData);
-                              });
-                          })
-                          .catch((error) => {
-                            console.error("Error:", error); // Handling errors
-                          });
-                      },
-                    },
-                  ],
-                });
-              },
-            };
-            badgeData.push(memberBadge);
             if (
               !(
                 badgeData.findIndex(

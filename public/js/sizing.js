@@ -124,7 +124,6 @@ $("#estimate").submit(async function (event) {
     };
 
     const response = await fetch(`${API_URL}/cards/`, {
-      // Replace '/your-endpoint' with your actual endpoint
       method: "POST",
       headers: {
         "Content-Type": "application/json",

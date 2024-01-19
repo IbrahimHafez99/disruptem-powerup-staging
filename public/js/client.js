@@ -258,57 +258,57 @@ window.TrelloPowerUp.initialize({
       },
     ];
   },
-  "card-badges": function (t, options) {
-    return t.get("card", "shared", "badgeData").then(function (badgeData) {
-      console.log("badgeData", badgeData);
-      // Otherwise, fetch the badge data from the backend and store it in pluginData
-      return t
-        .card("id")
-        .get("id")
-        .then(function (cardId) {
-          return fetch(`${ENDPOINT_URL}/cards/${cardId}`)
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("data", data);
-              const membersBadges = data.data.members.map((member) => {
-                return {
-                  text: `${member.memberId.name} ${member.sizing}`,
-                  color: "red",
-                  sizing: member.sizing,
-                  memberId: member.memberId._id,
-                  cardId: cardId,
-                  listId: data.data.listId,
-                };
-              });
-              console.log(data.data.categories);
-              const categoriesBadges = data.data.categories.map((category) => ({
-                text: category.name,
-                color: category.color,
-                icon: category.icon,
-                categoryId: category.id,
-                cardId: cardId,
-                listId: data.data.listId,
-              }));
-              const typesBadges = data.data.types.map((type) => ({
-                text: type.name,
-                color: type.color,
-                typeId: type.id,
-                cardId: cardId,
-                listId: data.data.listId,
-              }));
-              const badges = [
-                ...membersBadges,
-                ...categoriesBadges,
-                ...typesBadges,
-              ];
-              // Store the badge data in pluginData for future use
-              return t.set("card", "shared", "badgeData", badges).then(() => {
-                return badges;
-              });
-            });
-        });
-    });
-  },
+  // "card-badges": function (t, options) {
+  //   return t.get("card", "shared", "badgeData").then(function (badgeData) {
+  //     console.log("badgeData", badgeData);
+  //     // Otherwise, fetch the badge data from the backend and store it in pluginData
+  //     return t
+  //       .card("id")
+  //       .get("id")
+  //       .then(function (cardId) {
+  //         return fetch(`${ENDPOINT_URL}/cards/${cardId}`)
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             console.log("data", data);
+  //             const membersBadges = data.data.members.map((member) => {
+  //               return {
+  //                 text: `${member.memberId.name} ${member.sizing}`,
+  //                 color: "red",
+  //                 sizing: member.sizing,
+  //                 memberId: member.memberId._id,
+  //                 cardId: cardId,
+  //                 listId: data.data.listId,
+  //               };
+  //             });
+  //             console.log(data.data.categories);
+  //             const categoriesBadges = data.data.categories.map((category) => ({
+  //               text: category.name,
+  //               color: category.color,
+  //               icon: category.icon,
+  //               categoryId: category.id,
+  //               cardId: cardId,
+  //               listId: data.data.listId,
+  //             }));
+  //             const typesBadges = data.data.types.map((type) => ({
+  //               text: type.name,
+  //               color: type.color,
+  //               typeId: type.id,
+  //               cardId: cardId,
+  //               listId: data.data.listId,
+  //             }));
+  //             const badges = [
+  //               ...membersBadges,
+  //               ...categoriesBadges,
+  //               ...typesBadges,
+  //             ];
+  //             // Store the badge data in pluginData for future use
+  //             return t.set("card", "shared", "badgeData", badges).then(() => {
+  //               return badges;
+  //             });
+  //           });
+  //       });
+  //   });
+  // },
   "card-detail-badges": function (t, options) {
     return t
       .get("card", "shared", "detailBadgeData")
@@ -427,53 +427,26 @@ window.TrelloPowerUp.initialize({
                       });
                     },
                   };
-                  console.log("badgebadgebadgebadge", memberBadges);
+                  console.log("memberBadgesmemberBadgesmemberBadges", memberBadges);
                   // Add a callback if this isn’t a member sizing memberBadges
 
                   return memberBadges;
                 });
-
-                const categoriesBadges = data.data.categories.map(
-                  (category) => ({
-                    text: category.name,
-                    color: category.color,
-                    icon: category.icon,
-                    categoryId: category.id,
+                const categoriesBadges = data.data.members.map((member) => {
+                  const categoryBadge = {
+                    title: member.categoryId.name,
+                    sizing: member.sizing,
+                    color: member.categoryId.color,
                     cardId: cardId,
                     listId: data.data.listId,
-                    callback: function (t) {
-                      // Logic to handle category deletion
-                      const deleteData = {
-                        categoryId: category.id,
-                        cardId: cardId,
-                      };
-                      console.log("deleteData", deleteData);
-                      fetch(`${ENDPOINT_URL}/cards/delete-category`, {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(deleteData),
-                      })
-                        .then((response) => response.json())
-                        .then((responseData) => {
-                          // Remove the category from the badgeData
-                          const updatedDetailBadges = detailBadgeData.filter(
-                            (badge) => badge.categoryId !== category.id
-                          );
-                          return t.set(
-                            "card",
-                            "shared",
-                            "detailBadgeData",
-                            updatedDetailBadges
-                          );
-                        })
-                        .catch((error) => {
-                          console.error("Error deleting category:", error);
-                        });
-                    },
-                  })
-                );
+                    boardId: data.data.boardId
+                  };
+                  console.log("categoriesBadgescategoriesBadgescategoriesBadges", categoriesBadges);
+                  // Add a callback if this isn’t a member sizing memberBadges
+
+                  return categoriesBadges;
+                });
+                
                 const typesBadges = data.data.types.map((type) => ({
                   text: type.name,
                   color: type.color,
@@ -517,7 +490,7 @@ window.TrelloPowerUp.initialize({
                   ...membersBadges,
                   ...categoriesBadges,
                   ...typesBadges,
-                ]; //...categoriesBadges removed
+                ];
                 console.log("detailBadges", detailBadges);
 
                 // Store the badge data in pluginData for future use

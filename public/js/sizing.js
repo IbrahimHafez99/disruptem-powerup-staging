@@ -98,9 +98,11 @@ $("#estimate").submit(async function (event) {
   event.preventDefault();
 
   const selectedMemberId = $("#members").val();
+  const selectedCategoryId = $("#categories").val();
   const sizing = $("#estimation-size").val();
   const selectedMemberName = $("#members option:selected").text();
-  if (!sizing || !selectedMemberName) {
+  const selectedCategoryName = $("#categories option:selected").text();
+  if (!sizing && (!selectedMemberName || !selectedCategoryName)) {
     return;
   }
   try {
@@ -113,6 +115,7 @@ $("#estimate").submit(async function (event) {
     const data = {
       member: {
         memberId: selectedMemberId,
+        categoryId: selectedCategoryId,
         sizing: sizing,
       },
       cardId: card.id,

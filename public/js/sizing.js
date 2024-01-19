@@ -126,7 +126,7 @@ $("#estimate").submit(async function (event) {
       boardId: board.id,
     };
 
-    const response = await fetch(`${API_URL}/cards/`, {
+    const response = await fetch(`${API_URL}/cards/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

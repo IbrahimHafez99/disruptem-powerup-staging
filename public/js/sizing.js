@@ -72,6 +72,7 @@ function fetchMembers() {
 
 //populate the members into the UI
 function populateMembers(members) {
+  
   t.get("card", "shared", "memberSizing").then(function (memberSizing = []) {
     // memberSizing now contains the sizing data for members
     let memberIdsWithSizing = members.map((ms) => ms._id);

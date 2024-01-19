@@ -435,8 +435,8 @@ window.TrelloPowerUp.initialize({
                 });
                 const categoriesBadges = data.data.members.map((member) => {
                   const categoryBadge = {
-                    title: member.categoryId.name,
-                    text: "",
+                    title: "",
+                    text: member.categoryId.name,
                     sizing: member.sizing,
                     color: member.categoryId.color,
                     cardId: cardId,

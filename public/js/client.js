@@ -321,6 +321,7 @@ window.TrelloPowerUp.initialize({
               .then((response) => response.json())
               .then((data) => {
                 console.log("datadatadatadatadata", data);
+              
                 const membersBadges = data.data.members.map((member) => {
                   const memberBadges = {
                     title: member.memberId.name,
@@ -435,18 +436,17 @@ window.TrelloPowerUp.initialize({
                 const categoriesBadges = data.data.members.map((member) => {
                   const categoryBadge = {
                     title: member.categoryId.name,
+                    text: "",
                     sizing: member.sizing,
                     color: member.categoryId.color,
                     cardId: cardId,
                     listId: data.data.listId,
-                    boardId: data.data.boardId
                   };
-                  console.log("categoriesBadgescategoriesBadgescategoriesBadges", categoriesBadges);
+                  console.log("categoriesBadgescategoriesBadgescategoriesBadges", categoryBadge);
                   // Add a callback if this isn’t a member sizing memberBadges
 
-                  return categoriesBadges;
+                  return categoryBadge;
                 });
-                
                 const typesBadges = data.data.types.map((type) => ({
                   text: type.name,
                   color: type.color,
@@ -486,6 +486,7 @@ window.TrelloPowerUp.initialize({
                       });
                   },
                 }));
+              
                 const detailBadges = [
                   ...membersBadges,
                   ...categoriesBadges,

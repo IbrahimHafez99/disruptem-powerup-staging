@@ -322,7 +322,7 @@ window.TrelloPowerUp.initialize({
               .then((data) => {
                 console.log("datadatadatadatadata", data);
                 const membersBadges = data.data.members.map((member) => {
-                  const badge = {
+                  const memberBadges = {
                     title: member.memberId.name,
                     text: member.sizing,
                     sizing: member.sizing,
@@ -427,10 +427,10 @@ window.TrelloPowerUp.initialize({
                       });
                     },
                   };
-                  console.log("badgebadgebadgebadge", badge);
-                  // Add a callback if this isn’t a member sizing badge
+                  console.log("badgebadgebadgebadge", memberBadges);
+                  // Add a callback if this isn’t a member sizing memberBadges
 
-                  return badge;
+                  return memberBadges;
                 });
 
                 const categoriesBadges = data.data.categories.map(

@@ -98,10 +98,13 @@ $("#estimate").submit(async function (event) {
   event.preventDefault();
 
   const selectedMemberId = $("#members").val();
-  const selectedCategoryId = $("#categories").val();
+  const [selectedCategoryId, selectedCategoryColor] = $("#categories")
+    .val()
+    .split("-");
   const sizing = $("#estimation-size").val();
   const selectedMemberName = $("#members option:selected").text();
   const selectedCategoryName = $("#categories option:selected").text();
+  
   if (!sizing && (!selectedMemberName || !selectedCategoryName)) {
     return;
   }

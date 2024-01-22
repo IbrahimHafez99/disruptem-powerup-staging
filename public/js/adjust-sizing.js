@@ -9,27 +9,29 @@ document.addEventListener("DOMContentLoaded", function () {
   // Populate form fields from initial data passed to the iframe
   var initialData = t.arg("initialFormData");
   console.log("initialFormDatainitialFormData", initialData);
-
+  const body = { pointId: initialData.pointId, cardId: initialData.cardId };
   // Fetch point data and populate the selects
   fetch(`${ENDPOINT_URL}/public/trello/points`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: (
-      {: initialData.pointId, cardId: initialData.cardId}
-    ).then((response) => response.json()),
-  }).then((data) => {
-    memberIdSelect.value = data.data.memberId._id;
-    categorySelect.value = data.data.categoryId._id;
-    sizingInput.value = data.data.sizing;
-  });
+    body: JSON.stringify(body),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+    console.log("bodybody", data)
+      memberIdSelect.value = data.data.memberId.name;
+      categorySelect.value = data.data.categoryId.name;
+      sizingInput.value = data.data.sizing;
+    });
 
   // Fetch additional members and populate the member select
   fetch(`${ENDPOINT_URL}/public/trello/members`)
     .then((response) => response.json())
     .then((data) => {
-      data.forEach((member) => {
+    console.log("membersss", data)
+      data.data.members.forEach((member) => {
         var option = document.createElement("option");
         option.value = member._id;
         option.textContent = member.name;

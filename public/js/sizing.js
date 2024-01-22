@@ -135,7 +135,6 @@ $("#estimate").submit(async function (event) {
           badgeData = []
         ) {
           console.log("cardDatacardDatacardData", cardData.data)
-          console.log("badgeDatabadgeDatabadgeData", badgeData.forEach(badge => console.log(badge)))
           const existingMemberBadge = badgeData.find(
             (badge) => badge.memberId === data.memberId
           );
@@ -148,7 +147,7 @@ $("#estimate").submit(async function (event) {
               memberId: data.member.memberId,
               cardId: data.cardId,
               listId: data.listId,
-              pointId: cardData.
+              pointId: cardData.members[0]._id ?? "not working",
               //               callback: function (t) {
               //                 let outSideContext = t;
               //                 return outSideContext.popup({
@@ -240,6 +239,7 @@ $("#estimate").submit(async function (event) {
               //                 });
               //               },
             };
+            console.log("memberBadgememberBadge_!!!!!!!!", memberBadge)
             badgeData.push(memberBadge);
           }
 

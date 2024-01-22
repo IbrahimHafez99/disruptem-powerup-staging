@@ -1,24 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Adjust Member Sizing</title>
-  <!-- Add any required styles or scripts -->
+    <meta charset="UTF-8">
+    <title>Adjust Member Sizing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-  <form id="adjust-size-form">
-    <label for="member-select">Member:</label>
-    <select id="member-select"></select>
+    <div class="form-group">
+        <label for="member">Member:</label>
+        <select id="member"></select>
+    </div>
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <select id="category"></select>
+    </div>
+    <div class="form-group">
+        <label for="sizing">Sizing:</label>
+        <input type="number" id="sizing">
+    </div>
+    <button class="button" id="submit">Submit</button>
 
-    <label for="category">Category:</label>
-    <input type="text" id="category" readonly>
-
-    <label for="sizing">Sizing:</label>
-    <input type="number" id="sizing">
-
-    <button type="submit">Save Changes</button>
-  </form>
-
-  <!-- Link to your JavaScript file -->
-  <script src="../js/adjust-size.js"></script>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <script src="adjust-size.js"></script>
 </body>
 </html>

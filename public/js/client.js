@@ -335,33 +335,7 @@ window.TrelloPowerUp.initialize({
                       pointId: member._id,
                       callback: function (t) {
                         // Fetch initial data
-                        fetch(`${ENDPOINT_URL}/public/trello/points`, {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            cardId,
-                            pointId: member._id,
-                          }),
-                        })
-                          .then((response) => response.json())
-                          .then((data) => {
-                            const initialFormData = {
-                              member: data.data.memberId,
-                              category: member.categoryId,
-                              sizing: member.sizing,
-                            };
-
-                            // Open the popup with the correct context and data
-                            
-                          })
-                          .catch((error) => {
-                            console.error(
-                              "Error fetching initial form data:",
-                              error
-                            );
-                          });
+                        //fetch 
                         return t.popup({
                               title: "Adjust Member Sizing",
                               url: "./adjust-size.html",

@@ -20,35 +20,38 @@ document.addEventListener("DOMContentLoaded", function () {
   })
     .then((response) => response.json())
     .then((data) => {
-    console.log("bodybody", data)
-      memberIdSelect.value = data.data.memberId.name;
-      categorySelect.value = data.data.categoryId.name;
+      console.log("bodybody", data);
+      const defaultMember = data.data.memberId._id;
+      const defaultCategory = data.data.categoryId._id;
       sizingInput.value = data.data.sizing;
-    });
+      // Fetch additional members and populate the member select
+      fetch(`${ENDPOINT_URL}/public/trello/members`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("membersss", data);
+        
+          data.data.members.forEach((member) => {
+            var option = document.createElement("option");
+            option.selected = member._id === defaultMember;
+            option.value = member._id;
+            option.textContent = member.name;
+            memberIdSelect.appendChild(option);
+          });
+        });
 
-  // Fetch additional members and populate the member select
-  fetch(`${ENDPOINT_URL}/public/trello/members`)
-    .then((response) => response.json())
-    .then((data) => {
-    console.log("membersss", data)
-      data.data.members.forEach((member) => {
-        var option = document.createElement("option");
-        option.value = member._id;
-        option.textContent = member.name;
-        memberIdSelect.appendChild(option);
-      });
-    });
-
-  // Fetch categories and populate the category select
-  fetch(`${ENDPOINT_URL}/public/trello/categories`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.forEach((category) => {
-        var option = document.createElement("option");
-        option.value = category._id;
-        option.textContent = category.name;
-        categorySelect.appendChild(option);
-      });
+      // Fetch categories and populate the category select
+      fetch(`${ENDPOINT_URL}/public/trello/categories`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("categoriessss", data);
+          data.data.categories.forEach((category) => {
+            var option = document.createElement("option");
+            option.value = category._id;
+            option.textContent = category.name;
+            option.selected = category._id === defaultCategory;
+            categorySelect.appendChild(option);
+          });
+        });
     });
 
   // Submit button logic

@@ -334,7 +334,7 @@ window.TrelloPowerUp.initialize({
                       listId: data.data.listId,
                       pointId: member._id,
                       callback: function (t) {
-                        // Define the initial form
+                        // Fetch initial data
                         fetch(`${ENDPOINT_URL}/public/trello/points`, {
                           method: "POST",
                           headers: {
@@ -353,14 +353,21 @@ window.TrelloPowerUp.initialize({
                               sizing: member.sizing,
                             };
 
-                            // Open the popup
-                            return t.popup({
-                              title: "Adjust Member Sizing",
-                              url: "./adjust-size.html", // URL to the HTML file containing the form
-                              args: { initialFormData }, // Pass the initial form data to the popup
-                              height: 184, // Adjust the height as needed
-                            });
+                            // Open the popup with the correct context and data
+                            
+                          })
+                          .catch((error) => {
+                            console.error(
+                              "Error fetching initial form data:",
+                              error
+                            );
                           });
+                        return t.popup({
+                              title: "Adjust Member Sizing",
+                              url: "./adjust-size.html",
+                              // args: { initialFormData },
+                              height: 184,
+                            });
                       },
                     };
                     console.log(

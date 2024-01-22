@@ -46,7 +46,6 @@ function fetchCategories() {
 //populate the categories into the UI
 function populateCategories(categories) {
   let cats = categories.map((ms) => ms._id);
-  console.log("categories", categories);
 
   const categoriesList = $("#categories");
   categories.forEach(function (category) {
@@ -72,19 +71,14 @@ function fetchMembers() {
 
 //populate the members into the UI
 function populateMembers(members) {
-  
   t.get("card", "shared", "memberSizing").then(function (memberSizing = []) {
     // memberSizing now contains the sizing data for members
-    let memberIdsWithSizing = members.map((ms) => ms._id);
-    console.log("memberIdsWithSizing", memberIdsWithSizing);
 
     const membersList = $("#members");
     members.forEach(function (member) {
       // Exclude members that have sizing data
-      if (!memberIdsWithSizing.includes(String(member.id))) {
-        const option = `<option value="${member._id}">${member.name}</option>`;
-        membersList.append(option);
-      }
+      const option = `<option value="${member._id}">${member.name}</option>`;
+      membersList.append(option);
     });
   });
 }
@@ -134,20 +128,25 @@ $("#estimate").submit(async function (event) {
         t.get("card", "shared", "detailBadgeData").then(function (
           badgeData = []
         ) {
-          console.log("badgeDatabadgeDatabadgeData", badgeData)
+          console.log("badgeDatabadgeDatabadgeData", badgeData);
           const existingMemberBadge = badgeData.find(
             (badge) => badge.memberId === data.memberId
           );
-          console.log("existingMemberBadgeexistingMemberBadgeexistingMemberBadge", existingMemberBadge)
+          console.log(
+            "datadata",
+            data
+          );
+          console.log("!existingMemberBadge && data.memberId",!existingMemberBadge && data.memberId, !existingMemberBadge, data.memberId )
           if (!existingMemberBadge && data.memberId) {
             const memberBadge = {
-              title: selectedMemberName,
+              pointId: cardData.data.members[0]._id ?? "not working",
+              title: "TESTT",
               text: data.member.sizing,
               color: "red",
               memberId: data.member.memberId,
               cardId: data.cardId,
               listId: data.listId,
-              pointId: cardData.data.members[0]._id ?? "not working",
+              
               //               callback: function (t) {
               //                 let outSideContext = t;
               //                 return outSideContext.popup({
@@ -239,7 +238,7 @@ $("#estimate").submit(async function (event) {
               //                 });
               //               },
             };
-            console.log("memberBadgememberBadge_!!!!!!!!", memberBadge)
+            console.log("memberBadgememberBadge_!!!!!!!!", memberBadge);
             badgeData.push(memberBadge);
           }
 
@@ -258,12 +257,12 @@ $("#estimate").submit(async function (event) {
             };
             badgeData.push(categoryBadge);
           }
-
-          return t
-            // .set("card", "shared", "detailBadgeData", badgeData)
-            .set("card", "shared", "detailBadgeData", "")
-            .then(() => t.closePopup())
-            .catch((error) => console.log(error));
+          return t.closePopup();
+          // return t
+          //   // .set("card", "shared", "detailBadgeData", badgeData)
+          //   .set("card", "shared", "detailBadgeData", "")
+          //   .then(() => t.closePopup())
+          //   .catch((error) => console.log(error));
         });
       });
   } catch (error) {

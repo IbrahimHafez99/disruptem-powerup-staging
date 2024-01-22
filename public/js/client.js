@@ -208,30 +208,30 @@ window.TrelloPowerUp.initialize({
           });
         },
       },
-//       {
-//         // icon is the URL to an image to be used as the button's icon.
-//         // The image should be 24x24 pixels.
-//         icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
+      //       {
+      //         // icon is the URL to an image to be used as the button's icon.
+      //         // The image should be 24x24 pixels.
+      //         icon: "https://cdn.glitch.global/bcb67d52-05a1-4b6e-a315-f5bae36b69eb/Add-Button-PNG.png?v=1688645933100",
 
-//         // text is the name of the button.
-//         text: "Category",
+      //         // text is the name of the button.
+      //         text: "Category",
 
-//         // callback is a function that is called when the button is clicked.
-//         callback: function (t) {
-//           // Popup an iframe when the button is clicked.
-//           // The iframe will load the URL provided and display it in a modal.
-//           return t.popup({
-//             // Title of the popup
-//             title: "Add Category",
+      //         // callback is a function that is called when the button is clicked.
+      //         callback: function (t) {
+      //           // Popup an iframe when the button is clicked.
+      //           // The iframe will load the URL provided and display it in a modal.
+      //           return t.popup({
+      //             // Title of the popup
+      //             title: "Add Category",
 
-//             // URL of the page to load into the iframe
-//             url: "./category.html",
+      //             // URL of the page to load into the iframe
+      //             url: "./category.html",
 
-//             // Height of the popup in pixels
-//             height: 184,
-//           });
-//         },
-//       },
+      //             // Height of the popup in pixels
+      //             height: 184,
+      //           });
+      //         },
+      //       },
       {
         // icon is the URL to an image to be used as the button's icon.
         // The image should be 24x24 pixels.
@@ -321,178 +321,186 @@ window.TrelloPowerUp.initialize({
               .then((response) => response.json())
               .then((data) => {
                 console.log("datadatadatadatadata", data);
-              
-                const membersBadges = data.data.members.map((member) => {
-                  const memberBadges = {
-                    title: member.memberId.name,
-                    text: member.sizing,
-                    sizing: member.sizing,
-                    color: "red",
-                    memberId: member.memberId._id,
+                let detailBadges = [];
+                if (data.data) {
+                  const membersBadges = data.data.members.map((member) => {
+                    const memberBadges = {
+                      title: member.memberId.name,
+                      text: member.sizing,
+                      sizing: member.sizing,
+                      color: "red",
+                      memberId: member.memberId._id,
+                      cardId: cardId,
+                      listId: data.data.listId,
+                      callback: function (t) {
+                        let outSideContext = t;
+                        return outSideContext.popup({
+                          title: "Adjust Member Sizing",
+                          items: [
+                            {
+                              text: "Delete Member",
+                              callback: function (t) {
+                                const data = {
+                                  memberId: member.memberId._id,
+                                  cardId: cardId,
+                                };
+                                fetch(`${ENDPOINT_URL}/cards/delete-member`, {
+                                  method: "POST", // Specifying the HTTP method
+                                  headers: {
+                                    "Content-Type": "application/json", // Setting the content type of the request
+                                  },
+                                  body: JSON.stringify(data), // Converting the data to a JSON string
+                                })
+                                  .then((response) => response.json()) // Parsing the JSON response from the server
+                                  .then((data) => {
+                                    console.log("Success:", data);
+                                    return t
+                                      .get("card", "shared", "detailBadgeData")
+                                      .then(function (badgeData) {
+                                        console.log(
+                                          "badgeDatabadgeDatabadgeData",
+                                          badgeData
+                                        );
+                                        if (!badgeData) return;
+
+                                        badgeData.forEach((badge) => {
+                                          if (
+                                            badge.memberId &&
+                                            badge.memberId === data.memberId &&
+                                            badge.cardId === data.cardId
+                                          ) {
+                                            console.log(
+                                              badge.memberId,
+                                              badge.cardId
+                                            );
+                                            badgeData = badgeData.filter(
+                                              (b) =>
+                                                b.memberId !== data.memberId &&
+                                                b.cardId !== data.cardId
+                                            );
+                                          }
+                                          if (
+                                            badge.memberIds &&
+                                            badge.memberIds.includes(
+                                              data.memberId
+                                            ) &&
+                                            badge.cardId === data.cardId
+                                          ) {
+                                            // Remove the member ID from the badge's memberIds array
+                                            badge.memberIds =
+                                              badge.memberIds.filter(
+                                                (id) => id !== data.memberId
+                                              );
+
+                                            // If the memberIds array is now empty, remove the badge
+                                            if (badge.memberIds.length === 0) {
+                                              badgeData = badgeData.filter(
+                                                (b) =>
+                                                  b.categoryId !==
+                                                    badge.categoryId &&
+                                                  b.cardId === data.cardId
+                                              );
+                                            }
+                                          }
+                                        });
+                                        console.log("badgeData", badgeData);
+                                        // Update pluginData with the updated badge data
+                                        t.set(
+                                          "card",
+                                          "shared",
+                                          "badgeData",
+                                          badgeData
+                                        );
+                                      });
+                                  })
+                                  .catch((error) => {
+                                    console.error("Error:", error); // Handling errors
+                                  });
+
+                                console.log(
+                                  "Deleting member with ID: ",
+                                  member.memberId._id,
+                                  cardId.id
+                                );
+                                // Implement your logic here to delete the member from the card
+                              },
+                            },
+                          ],
+                        });
+                      },
+                    };
+                    console.log(
+                      "memberBadgesmemberBadgesmemberBadges",
+                      memberBadges
+                    );
+                    // Add a callback if this isn’t a member sizing memberBadges
+
+                    return memberBadges;
+                  });
+                  const categoriesBadges = data.data.members.map((member) => {
+                    const categoryBadge = {
+                      title: "",
+                      text: member.categoryId.name,
+                      sizing: member.sizing,
+                      color: member.categoryId.color,
+                      cardId: cardId,
+                      listId: data.data.listId,
+                    };
+                    console.log(
+                      "categoriesBadgescategoriesBadgescategoriesBadges",
+                      categoryBadge
+                    );
+                    // Add a callback if this isn’t a member sizing memberBadges
+
+                    return categoryBadge;
+                  });
+                  const typesBadges = data.data.types.map((type) => ({
+                    text: type.name,
+                    color: type.color,
+                    icon: type.icon,
+                    typeId: type.id,
                     cardId: cardId,
                     listId: data.data.listId,
                     callback: function (t) {
-                      let outSideContext = t;
-                      return outSideContext.popup({
-                        title: "Adjust Member Sizing",
-                        items: [
-                          {
-                            text: "Delete Member",
-                            callback: function (t) {
-                              const data = {
-                                memberId: member.memberId._id,
-                                cardId: cardId,
-                              };
-                              fetch(`${ENDPOINT_URL}/cards/delete-member`, {
-                                method: "POST", // Specifying the HTTP method
-                                headers: {
-                                  "Content-Type": "application/json", // Setting the content type of the request
-                                },
-                                body: JSON.stringify(data), // Converting the data to a JSON string
-                              })
-                                .then((response) => response.json()) // Parsing the JSON response from the server
-                                .then((data) => {
-                                  console.log("Success:", data);
-                                  return t
-                                    .get("card", "shared", "detailBadgeData")
-                                    .then(function (badgeData) {
-                                      console.log(
-                                        "badgeDatabadgeDatabadgeData",
-                                        badgeData
-                                      );
-                                      if (!badgeData) return;
-
-                                      badgeData.forEach((badge) => {
-                                        if (
-                                          badge.memberId &&
-                                          badge.memberId === data.memberId &&
-                                          badge.cardId === data.cardId
-                                        ) {
-                                          console.log(
-                                            badge.memberId,
-                                            badge.cardId
-                                          );
-                                          badgeData = badgeData.filter(
-                                            (b) =>
-                                              b.memberId !== data.memberId &&
-                                              b.cardId !== data.cardId
-                                          );
-                                        }
-                                        if (
-                                          badge.memberIds &&
-                                          badge.memberIds.includes(
-                                            data.memberId
-                                          ) &&
-                                          badge.cardId === data.cardId
-                                        ) {
-                                          // Remove the member ID from the badge's memberIds array
-                                          badge.memberIds =
-                                            badge.memberIds.filter(
-                                              (id) => id !== data.memberId
-                                            );
-
-                                          // If the memberIds array is now empty, remove the badge
-                                          if (badge.memberIds.length === 0) {
-                                            badgeData = badgeData.filter(
-                                              (b) =>
-                                                b.categoryId !==
-                                                  badge.categoryId &&
-                                                b.cardId === data.cardId
-                                            );
-                                          }
-                                        }
-                                      });
-                                      console.log("badgeData", badgeData);
-                                      // Update pluginData with the updated badge data
-                                      t.set(
-                                        "card",
-                                        "shared",
-                                        "badgeData",
-                                        badgeData
-                                      );
-                                    });
-                                })
-                                .catch((error) => {
-                                  console.error("Error:", error); // Handling errors
-                                });
-
-                              console.log(
-                                "Deleting member with ID: ",
-                                member.memberId._id,
-                                cardId.id
-                              );
-                              // Implement your logic here to delete the member from the card
-                            },
-                          },
-                        ],
-                      });
-                    },
-                  };
-                  console.log("memberBadgesmemberBadgesmemberBadges", memberBadges);
-                  // Add a callback if this isn’t a member sizing memberBadges
-
-                  return memberBadges;
-                });
-                const categoriesBadges = data.data.members.map((member) => {
-                  const categoryBadge = {
-                    title: "",
-                    text: member.categoryId.name,
-                    sizing: member.sizing,
-                    color: member.categoryId.color,
-                    cardId: cardId,
-                    listId: data.data.listId,
-                  };
-                  console.log("categoriesBadgescategoriesBadgescategoriesBadges", categoryBadge);
-                  // Add a callback if this isn’t a member sizing memberBadges
-
-                  return categoryBadge;
-                });
-                const typesBadges = data.data.types.map((type) => ({
-                  text: type.name,
-                  color: type.color,
-                  icon: type.icon,
-                  typeId: type.id,
-                  cardId: cardId,
-                  listId: data.data.listId,
-                  callback: function (t) {
-                    // Logic to handle type deletion
-                    const deleteData = {
-                      typeId: type.id,
-                      cardId: cardId,
-                    };
-                    console.log("deleteData", deleteData);
-                    fetch(`${ENDPOINT_URL}/cards/delete-type`, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify(deleteData),
-                    })
-                      .then((response) => response.json())
-                      .then((responseData) => {
-                        // Remove the type from the badgeData
-                        const updatedDetailBadges = detailBadgeData.filter(
-                          (badge) => badge.typeId !== type.id
-                        );
-                        return t.set(
-                          "card",
-                          "shared",
-                          "detailBadgeData",
-                          updatedDetailBadges
-                        );
+                      // Logic to handle type deletion
+                      const deleteData = {
+                        typeId: type.id,
+                        cardId: cardId,
+                      };
+                      console.log("deleteData", deleteData);
+                      fetch(`${ENDPOINT_URL}/cards/delete-type`, {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(deleteData),
                       })
-                      .catch((error) => {
-                        console.error("Error deleting type:", error);
-                      });
-                  },
-                }));
-              
-                const detailBadges = [
-                  ...membersBadges,
-                  ...categoriesBadges,
-                  ...typesBadges,
-                ];
-                console.log("detailBadges", detailBadges);
+                        .then((response) => response.json())
+                        .then((responseData) => {
+                          // Remove the type from the badgeData
+                          const updatedDetailBadges = detailBadgeData.filter(
+                            (badge) => badge.typeId !== type.id
+                          );
+                          return t.set(
+                            "card",
+                            "shared",
+                            "detailBadgeData",
+                            updatedDetailBadges
+                          );
+                        })
+                        .catch((error) => {
+                          console.error("Error deleting type:", error);
+                        });
+                    },
+                  }));
+
+                  detailBadges = [
+                    ...membersBadges,
+                    ...categoriesBadges,
+                    ...typesBadges,
+                  ];
+                  console.log("detailBadges", detailBadges);
+                }
 
                 // Store the badge data in pluginData for future use
                 return t

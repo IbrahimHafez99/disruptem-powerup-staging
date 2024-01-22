@@ -342,8 +342,11 @@ window.TrelloPowerUp.initialize({
                               text: "Delete Member",
                               callback: function (t) {
                                 const data = {
-                                  memberId: member.memberId._id,
+                                  memberId: member.memberId,
                                   cardId: cardId,
+                                  pointId: member._id,
+                                  categoryId: member.categoryId,
+                                  sizing: member.sizing
                                 };
                                 fetch(`${ENDPOINT_URL}/cards/delete-member`, {
                                   method: "POST", // Specifying the HTTP method

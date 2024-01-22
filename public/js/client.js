@@ -200,7 +200,6 @@ window.TrelloPowerUp.initialize({
           return t.popup({
             // Title of the popup
             title: "Sizing Details",
-            args: { initialFormData },
             // URL of the page to load into the iframe
             url: "./sizing.html",
 

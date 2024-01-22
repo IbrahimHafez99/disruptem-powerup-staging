@@ -71,17 +71,25 @@ function fetchMembers() {
 
 //populate the members into the UI
 function populateMembers(members) {
-  t.get("card", "shared", "memberSizing").then(async function (memberSizing = []) {
+  t.get("card", "shared", "memberSizing").then(async function (
+    memberSizing = []
+  ) {
     // memberSizing now contains the sizing data for members
     const cardId = await t.card("id");
     const board = await t.board("id");
-    const db = await fetch(`${API_URL}/cards/${cardId}`)
-    console.log("ddbdbdbdbb", db)
+    console.log("cardId", cardId.id);
+    const response = await fetch(`${API_URL}/cards/${cardId.id}`);
+    const data = await response.json();
+    console.log("ddbdbdbdbb", data);
     const membersList = $("#members");
     members.forEach(function (member) {
       // Exclude members that have sizing data
-      const option = `<option value="${member._id}">${member.name}</option>`;
-      membersList.append(option);
+      if (
+        !data?.data?.members?.map((mem) => mem.memberId._id).includes(member._id)
+      ) {
+        const option = `<option value="${member._id}">${member.name}</option>`;
+        membersList.append(option);
+      }
     });
   });
 }
@@ -95,11 +103,12 @@ $("#estimate").submit(async function (event) {
     .val()
     .split("-");
   const sizing = $("#estimation-size").val();
+  
   const selectedMemberName = $("#members option:selected").text();
   const selectedCategoryName = $("#categories option:selected").text();
-
-  if (!sizing && (!selectedMemberName || !selectedCategoryName)) {
-    return;
+console.log(!selectedMemberName, !selectedCategoryName )
+  if (!sizing && (selectedMemberName || selectedCategoryName)) {
+    return 0;
   }
   try {
     // Fetch the card, list, and board IDs
@@ -134,7 +143,7 @@ $("#estimate").submit(async function (event) {
           const existingMemberBadge = badgeData.find(
             (badge) => badge.memberId === data?.member?.memberId
           );
-         
+
           if (!existingMemberBadge && data?.member?.memberId) {
             const memberBadge = {
               pointId: cardData.data.members[0]._id,
@@ -144,7 +153,7 @@ $("#estimate").submit(async function (event) {
               memberId: data.member.memberId,
               cardId: data.cardId,
               listId: data.listId,
-              
+
               //               callback: function (t) {
               //                 let outSideContext = t;
               //                 return outSideContext.popup({
@@ -242,7 +251,8 @@ $("#estimate").submit(async function (event) {
           const existingCategoryBadge = badgeData.find(
             (badge) => badge.categoryId === data.member.categoryId
           );
-
+          console.log('existingCategoryBadgeexistingCategoryBadge', existingCategoryBadge)
+          console.log('data.member.categoryIddata.member.categoryId', data.member.categoryId)
           if (!existingCategoryBadge && data.member.categoryId) {
             const categoryBadge = {
               title: "category",
@@ -255,13 +265,18 @@ $("#estimate").submit(async function (event) {
             };
             badgeData.push(categoryBadge);
           }
-          console.log("badgeDatabadgeDatabadgeDatabadgeDatabadgeDatabadgeDatabadgeData", badgeData)
-          
-          return t
-            // .set("card", "shared", "detailBadgeData", badgeData)
-            .set("card", "shared", "detailBadgeData", badgeData)
-            .then(() => t.closePopup())
-            .catch((error) => console.log(error));
+          console.log(
+            "badgeDatabadgeDatabadgeDatabadgeDatabadgeDatabadgeDatabadgeData",
+            badgeData
+          );
+
+          return (
+            t
+              // .set("card", "shared", "detailBadgeData", badgeData)
+              .set("card", "shared", "detailBadgeData", badgeData)
+              .then(() => t.closePopup())
+              .catch((error) => console.log(error))
+          );
         });
       });
   } catch (error) {

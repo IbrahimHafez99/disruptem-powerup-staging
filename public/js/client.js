@@ -447,6 +447,7 @@ window.TrelloPowerUp.initialize({
                       cardId: cardId,
                       pointId: member._id,
                       listId: data.data.listId,
+                      pointId: member._id,
                     };
                     console.log(
                       "categoriesBadgescategoriesBadgescategoriesBadges",
@@ -463,6 +464,7 @@ window.TrelloPowerUp.initialize({
                     typeId: type.id,
                     cardId: cardId,
                     listId: data.data.listId,
+                    
                     callback: function (t) {
                       // Logic to handle type deletion
                       const deleteData = {

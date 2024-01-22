@@ -196,10 +196,11 @@ window.TrelloPowerUp.initialize({
         callback: function (t) {
           // Popup an iframe when the button is clicked.
           // The iframe will load the URL provided and display it in a modal.
+          t.get
           return t.popup({
             // Title of the popup
             title: "Sizing Details",
-
+            args: { initialFormData },
             // URL of the page to load into the iframe
             url: "./sizing.html",
 

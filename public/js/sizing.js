@@ -71,9 +71,12 @@ function fetchMembers() {
 
 //populate the members into the UI
 function populateMembers(members) {
-  t.get("card", "shared", "memberSizing").then(function (memberSizing = []) {
+  t.get("card", "shared", "memberSizing").then(async function (memberSizing = []) {
     // memberSizing now contains the sizing data for members
-
+    const cardId = await t.card("id");
+    const board = await t.board("id");
+    const db = await fetch(`${API_URL}/cards/${cardId}`)
+    console.log("ddbdbdbdbb", db)
     const membersList = $("#members");
     members.forEach(function (member) {
       // Exclude members that have sizing data

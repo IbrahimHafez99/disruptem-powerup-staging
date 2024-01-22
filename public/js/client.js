@@ -334,23 +334,33 @@ window.TrelloPowerUp.initialize({
                       listId: data.data.listId,
                       pointId: member._id,
                       callback: function (t) {
-                        // Define the initial form 
-                        fetch(`${ENDPOINT_URL}/public/trello/categories`).then(response => response.json()).then(data => {
-                          console.log('datadatadata', data)
+                        // Define the initial form
+                        fetch(`${ENDPOINT_URL}/public/trello/points`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            cardId,
+                            pointId: member._id,
+                          }),
                         })
-                        const initialFormData = {
-                          memberId: member.memberId._id,
-                          categoryId: member.categoryId.id,
-                          sizing: member.sizing,
-                        };
+                          .then((response) => response.json())
+                          .then((data) => {
+                            const initialFormData = {
+                              member: data.data.memberId,
+                              category: member.categoryId,
+                              sizing: member.sizing,
+                            };
 
-                        // Open the popup
-                        return t.popup({
-                          title: "Adjust Member Sizing",
-                          url: "./path-to-your-form.html", // URL to the HTML file containing the form
-                          args: { initialFormData }, // Pass the initial form data to the popup
-                          height: 184, // Adjust the height as needed
-                        });
+                            // Open the popup
+                            return t.popup({
+                              title: "Adjust Member Sizing",
+                              url: "./adjust-size.html", // URL to the HTML file containing the form
+                              args: { initialFormData }, // Pass the initial form data to the popup
+                              height: 184, // Adjust the height as needed
+                            });
+                          });
                       },
                     };
                     console.log(

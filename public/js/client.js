@@ -336,10 +336,14 @@ window.TrelloPowerUp.initialize({
                       callback: function (t) {
                         // Fetch initial data
                         //fetch 
+                        const initialFormData = {
+                          cardId: cardId,
+                          pointId: member._id
+                        }
                         return t.popup({
                               title: "Adjust Member Sizing",
                               url: "./adjust-size.html",
-                              // args: { initialFormData },
+                              args: { initialFormData },
                               height: 184,
                             });
                       },

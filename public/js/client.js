@@ -196,7 +196,7 @@ window.TrelloPowerUp.initialize({
         callback: function (t) {
           // Popup an iframe when the button is clicked.
           // The iframe will load the URL provided and display it in a modal.
-          t.get
+          t.get;
           return t.popup({
             // Title of the popup
             title: "Sizing Details",
@@ -335,17 +335,17 @@ window.TrelloPowerUp.initialize({
                       pointId: member._id,
                       callback: function (t) {
                         // Fetch initial data
-                        //fetch 
+                        //fetch
                         const initialFormData = {
                           cardId: cardId,
-                          pointId: member._id
-                        }
+                          pointId: member._id,
+                        };
                         return t.popup({
-                              title: "Adjust Member Sizing",
-                              url: "./adjust-size.html",
-                              args: { initialFormData },
-                              height: 184,
-                            });
+                          title: "Adjust Member Sizing",
+                          url: "./adjust-size.html",
+                          args: { initialFormData },
+                          height: 184,
+                        });
                       },
                     };
                     console.log(
@@ -356,25 +356,34 @@ window.TrelloPowerUp.initialize({
 
                     return memberBadges;
                   });
-                  const categoriesBadges = data.data.members.map((member) => {
-                    const categoryBadge = {
-                      title: "",
-                      text: member.categoryId.name,
-                      sizing: member.sizing,
-                      color: member.categoryId.color,
-                      cardId: cardId,
-                      pointId: member._id,
-                      listId: data.data.listId,
-                      pointId: member._id,
-                    };
-                    console.log(
-                      "categoriesBadgescategoriesBadgescategoriesBadges",
-                      categoryBadge
-                    );
-                    // Add a callback if this isn’t a member sizing memberBadges
+                  const categoriesBadges = data.data.members
+                    // First, reduce to unique categories
+                    .reduce((uniqueCategories, member) => {
+                      if (
+                        !uniqueCategories.some(
+                          (uc) => uc.categoryId._id === member.categoryId._id
+                        )
+                      ) {
+                        uniqueCategories.push(member);
+                      }
+                      return uniqueCategories;
+                    }, [])
+                    // Then, map to badges
+                    .map((member) => {
+                      const categoryBadge = {
+                        title: "",
+                        text: member.categoryId.name,
+                        sizing: member.sizing,
+                        color: member.categoryId.color,
+                        cardId: cardId,
+                        categoryId: member.categoryId._id,
+                        pointId: member._id,
+                        listId: data.data.listId,
+                      };
+                      console.log("Unique Category Badge:", categoryBadge);
+                      return categoryBadge;
+                    });
 
-                    return categoryBadge;
-                  });
                   const typesBadges = data.data.types.map((type) => ({
                     text: type.name,
                     color: type.color,

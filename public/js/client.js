@@ -334,102 +334,22 @@ window.TrelloPowerUp.initialize({
                       listId: data.data.listId,
                       pointId: member._id,
                       callback: function (t) {
-                        let outSideContext = t;
-                        return outSideContext.popup({
+                        // Define the initial form 
+                        fetch(`${ENDPOINT_URL}/public/trello/categories`).then(response => response.json()).then(data => {
+                          console.log('datadatadata', data)
+                        })
+                        const initialFormData = {
+                          memberId: member.memberId._id,
+                          categoryId: member.categoryId.id,
+                          sizing: member.sizing,
+                        };
+
+                        // Open the popup
+                        return t.popup({
                           title: "Adjust Member Sizing",
-                          items: [
-                            {
-                              text: "Delete Member",
-                              callback: function (t) {
-                                const data = {
-                                  memberId: member.memberId,
-                                  cardId: cardId,
-                                  pointId: member._id,
-                                  categoryId: member.categoryId,
-                                  sizing: member.sizing
-                                };
-                                fetch(`${ENDPOINT_URL}/cards/delete-member`, {
-                                  method: "POST", // Specifying the HTTP method
-                                  headers: {
-                                    "Content-Type": "application/json", // Setting the content type of the request
-                                  },
-                                  body: JSON.stringify(data), // Converting the data to a JSON string
-                                })
-                                  .then((response) => response.json()) // Parsing the JSON response from the server
-                                  .then((data) => {
-                                    console.log("Success:", data);
-                                    return t
-                                      .get("card", "shared", "detailBadgeData")
-                                      .then(function (badgeData) {
-                                        console.log(
-                                          "badgeDatabadgeDatabadgeData",
-                                          badgeData
-                                        );
-                                        if (!badgeData) return;
-
-                                        badgeData.forEach((badge) => {
-                                          if (
-                                            badge.memberId &&
-                                            badge.memberId === data.memberId &&
-                                            badge.cardId === data.cardId
-                                          ) {
-                                            console.log(
-                                              badge.memberId,
-                                              badge.cardId
-                                            );
-                                            badgeData = badgeData.filter(
-                                              (b) =>
-                                                b.memberId !== data.memberId &&
-                                                b.cardId !== data.cardId
-                                            );
-                                          }
-                                          if (
-                                            badge.memberIds &&
-                                            badge.memberIds.includes(
-                                              data.memberId
-                                            ) &&
-                                            badge.cardId === data.cardId
-                                          ) {
-                                            // Remove the member ID from the badge's memberIds array
-                                            badge.memberIds =
-                                              badge.memberIds.filter(
-                                                (id) => id !== data.memberId
-                                              );
-
-                                            // If the memberIds array is now empty, remove the badge
-                                            if (badge.memberIds.length === 0) {
-                                              badgeData = badgeData.filter(
-                                                (b) =>
-                                                  b.categoryId !==
-                                                    badge.categoryId &&
-                                                  b.cardId === data.cardId
-                                              );
-                                            }
-                                          }
-                                        });
-                                        console.log("badgeData", badgeData);
-                                        // Update pluginData with the updated badge data
-                                        t.set(
-                                          "card",
-                                          "shared",
-                                          "badgeData",
-                                          badgeData
-                                        );
-                                      });
-                                  })
-                                  .catch((error) => {
-                                    console.error("Error:", error); // Handling errors
-                                  });
-
-                                console.log(
-                                  "Deleting member with ID: ",
-                                  member.memberId._id,
-                                  cardId.id
-                                );
-                                // Implement your logic here to delete the member from the card
-                              },
-                            },
-                          ],
+                          url: "./path-to-your-form.html", // URL to the HTML file containing the form
+                          args: { initialFormData }, // Pass the initial form data to the popup
+                          height: 184, // Adjust the height as needed
                         });
                       },
                     };
@@ -467,7 +387,7 @@ window.TrelloPowerUp.initialize({
                     typeId: type.id,
                     cardId: cardId,
                     listId: data.data.listId,
-                    
+
                     callback: function (t) {
                       // Logic to handle type deletion
                       const deleteData = {

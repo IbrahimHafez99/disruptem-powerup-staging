@@ -332,6 +332,7 @@ window.TrelloPowerUp.initialize({
                       memberId: member.memberId._id,
                       cardId: cardId,
                       listId: data.data.listId,
+                      pointId: member._id,
                       callback: function (t) {
                         let outSideContext = t;
                         return outSideContext.popup({
@@ -444,6 +445,7 @@ window.TrelloPowerUp.initialize({
                       sizing: member.sizing,
                       color: member.categoryId.color,
                       cardId: cardId,
+                      pointId: member._id,
                       listId: data.data.listId,
                     };
                     console.log(

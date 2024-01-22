@@ -135,7 +135,7 @@ $("#estimate").submit(async function (event) {
           if (!existingMemberBadge && data?.member?.memberId) {
             const memberBadge = {
               pointId: cardData.data.members[0]._id,
-              title: "TESTT",
+              title: selectedMemberName,
               text: data.member.sizing,
               color: "red",
               memberId: data.member.memberId,
@@ -252,7 +252,7 @@ $("#estimate").submit(async function (event) {
             };
             badgeData.push(categoryBadge);
           }
-          
+          console.log("badgeDatabadgeDatabadgeDatabadgeDatabadgeDatabadgeDatabadgeData", badgeData)
           
           return t
             // .set("card", "shared", "detailBadgeData", badgeData)

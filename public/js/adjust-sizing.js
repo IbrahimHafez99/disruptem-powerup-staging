@@ -29,14 +29,30 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((data) => {
           console.log("membersss", data);
-        
+        fetch(`${ENDPOINT_URL}/cards/${initialData.cardId}`)
+        .then((response) => response.json())
+        .then((card) => {
+          console.log("membersss", data);
+          console.log("cardssss", card)
           data.data.members.forEach((member) => {
-            var option = document.createElement("option");
-            option.selected = member._id === defaultMember;
-            option.value = member._id;
-            option.textContent = member.name;
-            memberIdSelect.appendChild(option);
+            if(!card.data.members.map(mem => mem.memberId._id).includes(member._id) || member._id === card.data) {
+              var option = document.createElement("option");
+              option.selected = member._id === defaultMember;
+              option.value = member._id;
+              option.textContent = member.name;
+              memberIdSelect.appendChild(option);
+            }
           });
+          
+        });
+          // data.data.members.forEach((member) => {
+          //   var option = document.createElement("option");
+          //   option.selected = member._id === defaultMember;
+          //   option.value = member._id;
+          //   option.textContent = member.name;
+          //   memberIdSelect.appendChild(option);
+          // });
+          
         });
 
       // Fetch categories and populate the category select

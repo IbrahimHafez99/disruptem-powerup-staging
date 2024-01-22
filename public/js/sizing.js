@@ -128,18 +128,13 @@ $("#estimate").submit(async function (event) {
         t.get("card", "shared", "detailBadgeData").then(function (
           badgeData = []
         ) {
-          console.log("badgeDatabadgeDatabadgeData", badgeData);
           const existingMemberBadge = badgeData.find(
-            (badge) => badge.memberId === data.memberId
+            (badge) => badge.memberId === data?.member?.memberId
           );
-          console.log(
-            "datadata",
-            data
-          );
-          console.log("!existingMemberBadge && data.memberId",!existingMemberBadge && data.memberId, !existingMemberBadge, data.memberId )
-          if (!existingMemberBadge && data.memberId) {
+         
+          if (!existingMemberBadge && data?.member?.memberId) {
             const memberBadge = {
-              pointId: cardData.data.members[0]._id ?? "not working",
+              pointId: cardData.data.members[0]._id,
               title: "TESTT",
               text: data.member.sizing,
               color: "red",
@@ -238,15 +233,14 @@ $("#estimate").submit(async function (event) {
               //                 });
               //               },
             };
-            console.log("memberBadgememberBadge_!!!!!!!!", memberBadge);
             badgeData.push(memberBadge);
           }
 
           const existingCategoryBadge = badgeData.find(
-            (badge) => badge.categoryId === data.categoryId
+            (badge) => badge.categoryId === data.member.categoryId
           );
 
-          if (!existingCategoryBadge && data.categoryId) {
+          if (!existingCategoryBadge && data.member.categoryId) {
             const categoryBadge = {
               title: "category",
               text: selectedCategoryName,
@@ -254,15 +248,17 @@ $("#estimate").submit(async function (event) {
               categoryId: data.member.categoryId,
               cardId: data.cardId,
               listId: data.listId,
+              pointId: cardData.data.members[0]._id,
             };
             badgeData.push(categoryBadge);
           }
-          return t.closePopup();
-          // return t
-          //   // .set("card", "shared", "detailBadgeData", badgeData)
-          //   .set("card", "shared", "detailBadgeData", "")
-          //   .then(() => t.closePopup())
-          //   .catch((error) => console.log(error));
+          
+          
+          return t
+            // .set("card", "shared", "detailBadgeData", badgeData)
+            .set("card", "shared", "detailBadgeData", badgeData)
+            .then(() => t.closePopup())
+            .catch((error) => console.log(error));
         });
       });
   } catch (error) {

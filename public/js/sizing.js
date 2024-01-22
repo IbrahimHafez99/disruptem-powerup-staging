@@ -134,11 +134,11 @@ $("#estimate").submit(async function (event) {
         t.get("card", "shared", "detailBadgeData").then(function (
           badgeData = []
         ) {
-          console.log("cardDatacardDatacardData", cardData.data)
+          console.log("badgeDatabadgeDatabadgeData", badgeData)
           const existingMemberBadge = badgeData.find(
             (badge) => badge.memberId === data.memberId
           );
-
+          console.log("existingMemberBadgeexistingMemberBadgeexistingMemberBadge", existingMemberBadge)
           if (!existingMemberBadge && data.memberId) {
             const memberBadge = {
               title: selectedMemberName,
@@ -147,7 +147,7 @@ $("#estimate").submit(async function (event) {
               memberId: data.member.memberId,
               cardId: data.cardId,
               listId: data.listId,
-              pointId: cardData.members[0]._id ?? "not working",
+              pointId: cardData.data.members[0]._id ?? "not working",
               //               callback: function (t) {
               //                 let outSideContext = t;
               //                 return outSideContext.popup({
@@ -261,7 +261,7 @@ $("#estimate").submit(async function (event) {
 
           return t
             // .set("card", "shared", "detailBadgeData", badgeData)
-            .set("card", "shared", "detailBadgeData", [])
+            .set("card", "shared", "detailBadgeData", "")
             .then(() => t.closePopup())
             .catch((error) => console.log(error));
         });

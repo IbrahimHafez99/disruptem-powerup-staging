@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("membersss", data);
           console.log("cardssss", card)
           data.data.members.forEach((member) => {
-            if(!card.data.members.map(mem => mem.memberId._id).includes(member._id) || member._id === card.data) {
+            if(!card.data.members.map(mem => mem.memberId._id).includes(member._id) || member._id === defaultMember) {
               var option = document.createElement("option");
               option.selected = member._id === defaultMember;
               option.value = member._id;

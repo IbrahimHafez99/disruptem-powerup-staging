@@ -127,21 +127,21 @@ document.addEventListener("DOMContentLoaded", function () {
             categoryId: categorySelect.value.split("-")[0],
             pointId: initialData.pointId,
             listId: initialData.listId,
-            callback: function (t) {
-              // Fetch initial data
-              //fetch
-              const initialFormData = {
-                cardId: initialData.cardId,
-                pointId: initialData.pointId,
-                listId: initialData.listId,
-              };
-              return t.popup({
-                title: "Adjust Member Sizing",
-                url: "./adjust-size.html",
-                args: { initialFormData },
-                height: 240,
-              });
-            },
+            // callback: function (t) {
+            //   // Fetch initial data
+            //   //fetch
+            //   const initialFormData = {
+            //     cardId: initialData.cardId,
+            //     pointId: initialData.pointId,
+            //     listId: initialData.listId,
+            //   };
+            //   return t.popup({
+            //     title: "Adjust Member Sizing",
+            //     url: "./adjust-size.html",
+            //     args: { initialFormData },
+            //     height: 240,
+            //   });
+            // },
           };
           detailBadgeData.push(categoryBadge);
         }

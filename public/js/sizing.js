@@ -252,9 +252,6 @@ console.log(!selectedMemberName, !selectedCategoryName )
             (badge) => badge.categoryId === data.member.categoryId
           );
           
-          console.log('existingCategoryBadgeexistingCategoryBadge', existingCategoryBadge.categoryId)
-          console.log('data.member.categoryIddata.member.categoryId', data.member.categoryId)
-          console.log("condition", !existingCategoryBadge && data?.member?.categoryId)
           if (!existingCategoryBadge && data?.member?.categoryId) {
             const categoryBadge = {
               title: "",

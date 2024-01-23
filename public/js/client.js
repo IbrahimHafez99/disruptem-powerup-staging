@@ -378,21 +378,21 @@ window.TrelloPowerUp.initialize({
                         categoryId: member.categoryId._id,
                         pointId: member._id,
                         listId: data.data.listId,
-                        callback: function (t) {
-                          // Fetch initial data
-                          //fetch
-                          const initialFormData = {
-                            cardId: cardId,
-                            pointId: member._id,
-                            listId: data.data.listId
-                          };
-                          return t.popup({
-                            title: "Adjust Member Sizing",
-                            url: "./adjust-size.html",
-                            args: { initialFormData },
-                            height: 240,
-                          });
-                        },
+                        // callback: function (t) {
+                        //   // Fetch initial data
+                        //   //fetch
+                        //   const initialFormData = {
+                        //     cardId: cardId,
+                        //     pointId: member._id,
+                        //     listId: data.data.listId
+                        //   };
+                        //   return t.popup({
+                        //     title: "Adjust Member Sizing",
+                        //     url: "./adjust-size.html",
+                        //     args: { initialFormData },
+                        //     height: 240,
+                        //   });
+                        // },
                       };
                       console.log("Unique Category Badge:", categoryBadge);
                       return categoryBadge;

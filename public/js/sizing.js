@@ -107,7 +107,7 @@ $("#estimate").submit(async function (event) {
   const selectedMemberName = $("#members option:selected").text();
   const selectedCategoryName = $("#categories option:selected").text();
 console.log(!selectedMemberName, !selectedCategoryName )
-  if (!sizing && (!selectedMemberName || !selectedCategoryName)) {
+  if (!sizing || (sizing && (!selectedMemberName || !selectedCategoryName)) ) {
     return;
   }
   try {

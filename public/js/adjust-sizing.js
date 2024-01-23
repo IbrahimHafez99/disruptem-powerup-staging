@@ -73,10 +73,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Submit button logic
   document.getElementById("submit").addEventListener("click", function () {
     // Construct the data to be sent
-    if (!parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value)) {
+    console.log (!parseFloat(sizingInput.value) || (parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value)))
+    if (!parseFloat(sizingInput.value) || (parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value))) {
       return;
     }
-    console.log(!parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value))
+    
     var updatedData = {
       memberId: memberIdSelect.value,
       category: categorySelect.value,

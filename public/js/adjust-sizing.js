@@ -29,22 +29,29 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((data) => {
           console.log("membersss", data);
-        fetch(`${ENDPOINT_URL}/cards/${initialData.cardId}`)
-        .then((response) => response.json())
-        .then((card) => {
-          console.log("membersss", data);
-          console.log("cardssss", card)
-          data.data.members.forEach((member) => {
-            if(!card.data.members.map(mem => mem.memberId?._id).includes(member._id) || card.data.members.map(mem => mem.memberId?._id).includes(member._id) && member._id === defaultMember) {
-              var option = document.createElement("option");
-              option.selected = member._id === defaultMember;
-              option.value = member._id;
-              option.textContent = member.name;
-              memberIdSelect.appendChild(option);
-            }
-          });
-          
-        });
+          fetch(`${ENDPOINT_URL}/cards/${initialData.cardId}`)
+            .then((response) => response.json())
+            .then((card) => {
+              console.log("membersss", data);
+              console.log("cardssss", card);
+              data.data.members.forEach((member) => {
+                if (
+                  !card.data.members
+                    .map((mem) => mem.memberId?._id)
+                    .includes(member._id) ||
+                  (card.data.members
+                    .map((mem) => mem.memberId?._id)
+                    .includes(member._id) &&
+                    member._id === defaultMember)
+                ) {
+                  var option = document.createElement("option");
+                  option.selected = member._id === defaultMember;
+                  option.value = member._id;
+                  option.textContent = member.name;
+                  memberIdSelect.appendChild(option);
+                }
+              });
+            });
           // data.data.members.forEach((member) => {
           //   var option = document.createElement("option");
           //   option.selected = member._id === defaultMember;
@@ -52,7 +59,6 @@ document.addEventListener("DOMContentLoaded", function () {
           //   option.textContent = member.name;
           //   memberIdSelect.appendChild(option);
           // });
-          
         });
 
       // Fetch categories and populate the category select
@@ -73,17 +79,29 @@ document.addEventListener("DOMContentLoaded", function () {
   // Submit button logic
   document.getElementById("submit").addEventListener("click", function () {
     // Construct the data to be sent
-    console.log (!parseFloat(sizingInput.value) || (parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value)))
-    if (!parseFloat(sizingInput.value) || (parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value))) {
+    console.log(
+      !parseFloat(sizingInput.value) ||
+        (parseFloat(sizingInput.value) &&
+          (!memberIdSelect.value || !categorySelect.value))
+    );
+    if (
+      !parseFloat(sizingInput.value) ||
+      (parseFloat(sizingInput.value) &&
+        !memberIdSelect.value &&
+        !categorySelect.value)
+    ) {
       return;
     }
-    
+    console.log("REACH");
     var updatedData = {
       memberId: memberIdSelect.value,
       category: categorySelect.value,
       sizing: parseFloat(sizingInput.value),
+      pointId: initialData.pointId,
+      cardId: initialData.cardId,
     };
-  console.log(updatedData)
+    fetch()
+    console.log(updatedData);
     // Send the data back to the Trello card
     // t.set("card", "shared", "memberSizing", updatedData).then(function () {
     //   t.closePopup();

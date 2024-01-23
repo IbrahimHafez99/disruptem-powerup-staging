@@ -85,7 +85,7 @@ function populateMembers(members) {
     members.forEach(function (member) {
       // Exclude members that have sizing data
       if (
-        !data?.data?.members?.map((mem) => mem.memberId._id).includes(member._id)
+        !data?.data?.members?.map((mem) => mem.memberId?._id).includes(member._id)
       ) {
         const option = `<option value="${member._id}">${member.name}</option>`;
         membersList.append(option);

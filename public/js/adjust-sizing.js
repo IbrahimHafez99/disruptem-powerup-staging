@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("categoriessss", data);
           data.data.categories.forEach((category) => {
             var option = document.createElement("option");
-            option.value = category._id;
+            option.value = `${category._id}-${category.color}`;
             option.textContent = category.name;
             option.selected = category._id === defaultCategory;
             categorySelect.appendChild(option);
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("REACH");
     var updatedData = {
       memberId: memberIdSelect.value,
-      categoryId: categorySelect.value,
+      categoryId: categorySelect.value.split("-")[0],
       sizing: parseFloat(sizingInput.value),
       pointId: initialData.pointId,
       cardId: initialData.cardId,
@@ -108,10 +108,19 @@ document.addEventListener("DOMContentLoaded", function () {
       body: JSON.stringify(updatedData),
     }).then(response => response.json()).then(data => console.log(data));
     console.log(updatedData);
-    t.get()
-    // Send the data back to the Trello card
-    // t.set("card", "shared", "memberSizing", updatedData).then(function () {
-    //   t.closePopup();
-    // });
+    t
+      .get("card", "shared", "detailBadgeData")
+      .then(function (detailBadgeData) {
+      console.log("SADASDASDASD", categorySelect.value)
+      // detailBadgeData.forEach(badge => {
+      //   if(badge.pointId === initialData.pointId && badge.categoryId) {
+      //     badge.color = categorySelect.value.split("-")[1]
+      //     badge.sizing = parseFloat(sizingInput.value)
+      //     badge.categoryId = categorySelect.value.split("-")[0]
+      //     badge.text = categorySelect.textContent
+      //   }
+      // })
+      
+    })
   });
 });

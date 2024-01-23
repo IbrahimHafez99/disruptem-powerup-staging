@@ -68,28 +68,24 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         });
     });
-    document.getElementById('deleteBtn').addEventListener('click', function() {
-  var data = {
-    // Use the appropriate identifiers for deletion
-    memberId: document.getElementById('member').value,
-    categoryId: document.getElementById('category').value
-  };
-  // Fetch request to delete item
-  fetch(`${ENDPOINT_URL}/card/delete-point`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Handle successful deletion
-    t.closePopup();
-  })
-  .catch(error => {
-    // Handle error
-    console.error('Error:', error);
+  document.getElementById("deleteBtn").addEventListener("click", function () {
+    // Fetch request to delete item
+    fetch(`${ENDPOINT_URL}/card/delete-point`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+      console.log("datadatadatadata", data)
+        // Handle successful deletion
+        // t.closePopup();
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
+      });
   });
-});
 
   // Submit button logic
   document.getElementById("submit").addEventListener("click", function () {
@@ -175,33 +171,33 @@ document.addEventListener("DOMContentLoaded", function () {
             badge.memberId &&
             badge.memberId === updatedData.memberId
         );
-        if(!existingMemberBadge) {
+        if (!existingMemberBadge) {
           const memberBadge = {
-          title: memberIdSelect.value.split("-")[1],
-          text: parseFloat(sizingInput.value),
-          sizing: parseFloat(sizingInput.value),
-          color: "red",
-          memberId: memberIdSelect.value.split("-")[0],
-          cardId: initialData.cardId,
-          pointId: initialData.pointId,
-          listId: initialData.listId,
-          callback: function (t) {
-            // Fetch initial data
-            //fetch
-            const initialFormData = {
-              cardId: initialData.cardId,
-              pointId: initialData.pointId,
-              listId: initialData.listId,
-            };
-            return t.popup({
-              title: "Adjust Member Sizing",
-              url: "./adjust-size.html",
-              args: { initialFormData },
-              height: 240,
-            });
-          },
-        };
-          detailBadgeData.push(memberBadge)
+            title: memberIdSelect.value.split("-")[1],
+            text: parseFloat(sizingInput.value),
+            sizing: parseFloat(sizingInput.value),
+            color: "red",
+            memberId: memberIdSelect.value.split("-")[0],
+            cardId: initialData.cardId,
+            pointId: initialData.pointId,
+            listId: initialData.listId,
+            callback: function (t) {
+              // Fetch initial data
+              //fetch
+              const initialFormData = {
+                cardId: initialData.cardId,
+                pointId: initialData.pointId,
+                listId: initialData.listId,
+              };
+              return t.popup({
+                title: "Adjust Member Sizing",
+                url: "./adjust-size.html",
+                args: { initialFormData },
+                height: 240,
+              });
+            },
+          };
+          detailBadgeData.push(memberBadge);
         }
       }
       // detailBadgeData.forEach((badge) => {

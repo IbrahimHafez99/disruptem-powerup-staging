@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   document.getElementById("deleteBtn").addEventListener("click", function () {
     // Fetch request to delete item
-    fetch(`${ENDPOINT_URL}/card/delete-point`, {
+    fetch(`${ENDPOINT_URL}/cards/delete-point`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

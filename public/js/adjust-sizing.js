@@ -105,6 +105,38 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(updatedData);
     t.get("card", "shared", "detailBadgeData").then(function (detailBadgeData) {
       console.log("SADASDASDASD", detailBadgeData);
+      // filtering(deleting) all badges for this point
+      detailBadgeData = detailBadgeData.filter(
+        (badge) => badge.pointId === initialData.pointId
+      );
+      //creating new badge for category
+      if (updatedData.categoryId) {
+        const categoryBadge = {
+          title: "",
+          text: categorySelect.value.split("-")[2],
+          sizing: parseFloat(sizingInput.value),
+          color: categorySelect.value.split("-")[1],
+          cardId: initialData.cardId,
+          categoryId: categorySelect.value.split("-")[0],
+          pointId: initialData.pointId,
+          listId: initialData.listId,
+          callback: function (t) {
+            // Fetch initial data
+            //fetch
+            const initialFormData = {
+              cardId: initialData.cardId,
+              pointId: initialData.pointId,
+              listId: initialData.listId,
+            };
+            return t.popup({
+              title: "Adjust Member Sizing",
+              url: "./adjust-size.html",
+              args: { initialFormData },
+              height: 184,
+            });
+          },
+        };
+      }
       detailBadgeData.forEach((badge) => {
         if (badge.pointId === initialData.pointId && badge.categoryId) {
           badge.color = categorySelect.value.split("-")[1];
@@ -119,7 +151,9 @@ document.addEventListener("DOMContentLoaded", function () {
           badge.title = memberIdSelect.value.split("-")[1];
         }
       });
-      t.set("card", "shared", "detailBadgeData", detailBadgeData);
+      t.set("card", "shared", "detailBadgeData", detailBadgeData)
+        .then(() => t.closePopup())
+        .catch((error) => console.log(error));
     });
   });
 });

@@ -386,6 +386,7 @@ window.TrelloPowerUp.initialize({
                           const initialFormData = {
                             cardId: cardId,
                             pointId: member._id,
+                            listId: data.data.listId
                           };
                           return t.popup({
                             title: "Adjust Member Sizing",

@@ -257,7 +257,7 @@ console.log(!selectedMemberName, !selectedCategoryName )
           console.log("condition", !existingCategoryBadge && data?.member?.categoryId)
           if (!existingCategoryBadge && data?.member?.categoryId) {
             const categoryBadge = {
-              title: "category",
+              title: "",
               text: selectedCategoryName,
               color: selectedCategoryColor,
               categoryId: data.member.categoryId,

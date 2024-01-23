@@ -46,19 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 ) {
                   var option = document.createElement("option");
                   option.selected = member._id === defaultMember;
-                  option.value = member._id;
+                  option.value = `${member._id}-${member.name}`;
                   option.textContent = member.name;
                   memberIdSelect.appendChild(option);
                 }
               });
             });
-          // data.data.members.forEach((member) => {
-          //   var option = document.createElement("option");
-          //   option.selected = member._id === defaultMember;
-          //   option.value = member._id;
-          //   option.textContent = member.name;
-          //   memberIdSelect.appendChild(option);
-          // });
         });
 
       // Fetch categories and populate the category select
@@ -68,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("categoriessss", data);
           data.data.categories.forEach((category) => {
             var option = document.createElement("option");
-            option.value = `${category._id}-${category.color}`;
+            option.value = `${category._id}-${category.color}-${category.name}`;
             option.textContent = category.name;
             option.selected = category._id === defaultCategory;
             categorySelect.appendChild(option);
@@ -94,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     console.log("REACH");
     var updatedData = {
-      memberId: memberIdSelect.value,
+      memberId: memberIdSelect.value.split("-")[0],
       categoryId: categorySelect.value.split("-")[0],
       sizing: parseFloat(sizingInput.value),
       pointId: initialData.pointId,
@@ -106,21 +99,27 @@ document.addEventListener("DOMContentLoaded", function () {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedData),
-    }).then(response => response.json()).then(data => console.log(data));
-    console.log(updatedData);
-    t
-      .get("card", "shared", "detailBadgeData")
-      .then(function (detailBadgeData) {
-      console.log("SADASDASDASD", categorySelect.value)
-      // detailBadgeData.forEach(badge => {
-      //   if(badge.pointId === initialData.pointId && badge.categoryId) {
-      //     badge.color = categorySelect.value.split("-")[1]
-      //     badge.sizing = parseFloat(sizingInput.value)
-      //     badge.categoryId = categorySelect.value.split("-")[0]
-      //     badge.text = categorySelect.textContent
-      //   }
-      // })
-      
     })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+    console.log(updatedData);
+    t.get("card", "shared", "detailBadgeData").then(function (detailBadgeData) {
+      console.log("SADASDASDASD", detailBadgeData);
+      detailBadgeData.forEach((badge) => {
+        if (badge.pointId === initialData.pointId && badge.categoryId) {
+          badge.color = categorySelect.value.split("-")[1];
+          badge.sizing = parseFloat(sizingInput.value);
+          badge.categoryId = categorySelect.value.split("-")[0];
+          badge.text = categorySelect.value.split("-")[2];
+        } else if (badge.pointId === initialData.pointId && badge.memberId) {
+          badge.sizing = parseFloat(sizingInput.value);
+          badge.memberId = memberIdSelect.value.split("-")[0];
+          badge.text = parseFloat(sizingInput.value);
+          badge.sizing = parseFloat(sizingInput.value);
+          badge.title = memberIdSelect.value.split("-")[1];
+        }
+      });
+      t.set("card", "shared", "detailBadgeData", detailBadgeData);
+    });
   });
 });

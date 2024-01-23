@@ -68,6 +68,28 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         });
     });
+    document.getElementById('deleteBtn').addEventListener('click', function() {
+  var data = {
+    // Use the appropriate identifiers for deletion
+    memberId: document.getElementById('member').value,
+    categoryId: document.getElementById('category').value
+  };
+  // Fetch request to delete item
+  fetch(`${ENDPOINT_URL}/card/delete-point`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Handle successful deletion
+    t.closePopup();
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error:', error);
+  });
+});
 
   // Submit button logic
   document.getElementById("submit").addEventListener("click", function () {

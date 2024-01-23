@@ -204,7 +204,7 @@ window.TrelloPowerUp.initialize({
             url: "./sizing.html",
 
             // Height of the popup in pixels
-            height: 184,
+            height: 240,
           });
         },
       },
@@ -252,7 +252,7 @@ window.TrelloPowerUp.initialize({
             url: "./type.html",
 
             // Height of the popup in pixels
-            height: 184,
+            height: 240,
           });
         },
       },
@@ -347,7 +347,7 @@ window.TrelloPowerUp.initialize({
                             title: "Adjust Member Sizing",
                             url: "./adjust-size.html",
                             args: { initialFormData },
-                            height: 184,
+                            height: 240,
                           });
                         },
                       });
@@ -392,7 +392,7 @@ window.TrelloPowerUp.initialize({
                             title: "Adjust Member Sizing",
                             url: "./adjust-size.html",
                             args: { initialFormData },
-                            height: 184,
+                            height: 240,
                           });
                         },
                       };

@@ -111,15 +111,56 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       //creating new badge for category
       if (updatedData.categoryId) {
-        const existingCategoryBadge = detailBadgeData.find(badge => ((updatedData.categoryId && badge.categoryId) && (badge.categoryId === updatedData.categoryId)))
-        if(!existingCategoryBadge) {
+        const existingCategoryBadge = detailBadgeData.find(
+          (badge) =>
+            updatedData.categoryId &&
+            badge.categoryId &&
+            badge.categoryId === updatedData.categoryId
+        );
+        if (!existingCategoryBadge) {
           const categoryBadge = {
-          title: "",
-          text: categorySelect.value.split("-")[2],
+            title: "",
+            text: categorySelect.value.split("-")[2],
+            sizing: parseFloat(sizingInput.value),
+            color: categorySelect.value.split("-")[1],
+            cardId: initialData.cardId,
+            categoryId: categorySelect.value.split("-")[0],
+            pointId: initialData.pointId,
+            listId: initialData.listId,
+            callback: function (t) {
+              // Fetch initial data
+              //fetch
+              const initialFormData = {
+                cardId: initialData.cardId,
+                pointId: initialData.pointId,
+                listId: initialData.listId,
+              };
+              return t.popup({
+                title: "Adjust Member Sizing",
+                url: "./adjust-size.html",
+                args: { initialFormData },
+                height: 240,
+              });
+            },
+          };
+          detailBadgeData.push(categoryBadge);
+        }
+      }
+      if (updatedData.memberId) {
+        const existingMemberBadge = detailBadgeData.find(
+          (badge) =>
+            updatedData.memberId &&
+            badge.memberId &&
+            badge.memberId === updatedData.memberId
+        );
+        if(!existingMemberBadge) {
+          const memberBadge = {
+          title: memberIdSelect.value.split("-")[1],
+          text: parseFloat(sizingInput.value),
           sizing: parseFloat(sizingInput.value),
-          color: categorySelect.value.split("-")[1],
+          color: "red",
+          memberId: memberIdSelect.value.split("-")[0],
           cardId: initialData.cardId,
-          categoryId: categorySelect.value.split("-")[0],
           pointId: initialData.pointId,
           listId: initialData.listId,
           callback: function (t) {
@@ -134,55 +175,27 @@ document.addEventListener("DOMContentLoaded", function () {
               title: "Adjust Member Sizing",
               url: "./adjust-size.html",
               args: { initialFormData },
-              height: 184,
+              height: 240,
             });
           },
         };
-          detailBadgeData.push(categoryBadge)
+          detailBadgeData.push(memberBadge)
         }
-        
       }
-      if(updatedData.memberId) {
-         const existingMemberBadge = detailBadgeData.find(badge => ((updatedData.memberId && badge.memberId) && (badge.memberId === updatedData.memberId)))
-         const memberBadge = {
-                        title: member.memberId.name,
-                        text: parseFloat(sizingInput.value),
-                        sizing: parseFloat(sizingInput.value),
-                        color: "red",
-                        memberId: member.memberId._id,
-                        cardId: cardId,
-                        listId: data.data.listId,
-                        pointId: member._id,
-                        callback: function (t) {
-                          // Fetch initial data
-                          //fetch
-                          const initialFormData = {
-                            cardId: cardId,
-                            pointId: member._id,
-                          };
-                          return t.popup({
-                            title: "Adjust Member Sizing",
-                            url: "./adjust-size.html",
-                            args: { initialFormData },
-                            height: 184,
-                          });
-                        },
-                      }
-      }
-      detailBadgeData.forEach((badge) => {
-        if (badge.pointId === initialData.pointId && badge.categoryId) {
-          badge.color = categorySelect.value.split("-")[1];
-          badge.sizing = parseFloat(sizingInput.value);
-          badge.categoryId = categorySelect.value.split("-")[0];
-          badge.text = categorySelect.value.split("-")[2];
-        } else if (badge.pointId === initialData.pointId && badge.memberId) {
-          badge.sizing = parseFloat(sizingInput.value);
-          badge.memberId = memberIdSelect.value.split("-")[0];
-          badge.text = parseFloat(sizingInput.value);
-          badge.sizing = parseFloat(sizingInput.value);
-          badge.title = memberIdSelect.value.split("-")[1];
-        }
-      });
+      // detailBadgeData.forEach((badge) => {
+      //   if (badge.pointId === initialData.pointId && badge.categoryId) {
+      //     badge.color = categorySelect.value.split("-")[1];
+      //     badge.sizing = parseFloat(sizingInput.value);
+      //     badge.categoryId = categorySelect.value.split("-")[0];
+      //     badge.text = categorySelect.value.split("-")[2];
+      //   } else if (badge.pointId === initialData.pointId && badge.memberId) {
+      //     badge.sizing = parseFloat(sizingInput.value);
+      //     badge.memberId = memberIdSelect.value.split("-")[0];
+      //     badge.text = parseFloat(sizingInput.value);
+      //     badge.sizing = parseFloat(sizingInput.value);
+      //     badge.title = memberIdSelect.value.split("-")[1];
+      //   }
+      // });
       t.set("card", "shared", "detailBadgeData", detailBadgeData)
         .then(() => t.closePopup())
         .catch((error) => console.log(error));

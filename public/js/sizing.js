@@ -107,8 +107,8 @@ $("#estimate").submit(async function (event) {
   const selectedMemberName = $("#members option:selected").text();
   const selectedCategoryName = $("#categories option:selected").text();
 console.log(!selectedMemberName, !selectedCategoryName )
-  if (!sizing && (selectedMemberName || selectedCategoryName)) {
-    return 0;
+  if (!sizing && (!selectedMemberName || !selectedCategoryName)) {
+    return;
   }
   try {
     // Fetch the card, list, and board IDs

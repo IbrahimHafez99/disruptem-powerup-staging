@@ -73,12 +73,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Submit button logic
   document.getElementById("submit").addEventListener("click", function () {
     // Construct the data to be sent
+    if (!parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value)) {
+      return;
+    }
+    console.log(!parseFloat(sizingInput.value) && (!memberIdSelect.value || !categorySelect.value))
     var updatedData = {
       memberId: memberIdSelect.value,
       category: categorySelect.value,
       sizing: parseFloat(sizingInput.value),
     };
-  console.log()
+  console.log(updatedData)
     // Send the data back to the Trello card
     // t.set("card", "shared", "memberSizing", updatedData).then(function () {
     //   t.closePopup();

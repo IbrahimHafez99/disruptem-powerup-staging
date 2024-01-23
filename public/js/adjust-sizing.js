@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("REACH");
     var updatedData = {
       memberId: memberIdSelect.value,
-      category: categorySelect.value,
+      categoryId: categorySelect.value,
       sizing: parseFloat(sizingInput.value),
       pointId: initialData.pointId,
       cardId: initialData.cardId,

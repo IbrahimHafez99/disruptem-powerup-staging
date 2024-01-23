@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function () {
       category: categorySelect.value,
       sizing: parseFloat(sizingInput.value),
     };
-
+  console.log()
     // Send the data back to the Trello card
-    t.set("card", "shared", "memberSizing", updatedData).then(function () {
-      t.closePopup();
-    });
+    // t.set("card", "shared", "memberSizing", updatedData).then(function () {
+    //   t.closePopup();
+    // });
   });
 });

@@ -100,8 +100,15 @@ document.addEventListener("DOMContentLoaded", function () {
       pointId: initialData.pointId,
       cardId: initialData.cardId,
     };
-    fetch()
+    fetch(`${ENDPOINT_URL}/cards/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    }).then(response => response.json()).then(data => console.log(data));
     console.log(updatedData);
+    t.get()
     // Send the data back to the Trello card
     // t.set("card", "shared", "memberSizing", updatedData).then(function () {
     //   t.closePopup();

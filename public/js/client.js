@@ -323,38 +323,39 @@ window.TrelloPowerUp.initialize({
                 console.log("datadatadatadatadata", data);
                 let detailBadges = [];
                 if (data.data) {
-                  const membersBadges = data.data.members.map((member) => {
-                    const memberBadges = {
-                      title: member.memberId.name,
-                      text: member.sizing,
-                      sizing: member.sizing,
-                      color: "red",
-                      memberId: member.memberId._id,
-                      cardId: cardId,
-                      listId: data.data.listId,
-                      pointId: member._id,
-                      callback: function (t) {
-                        // Fetch initial data
-                        //fetch
-                        const initialFormData = {
-                          cardId: cardId,
-                          pointId: member._id,
-                        };
-                        return t.popup({
-                          title: "Adjust Member Sizing",
-                          url: "./adjust-size.html",
-                          args: { initialFormData },
-                          height: 184,
-                        });
-                      },
-                    };
-                    console.log(
-                      "memberBadgesmemberBadgesmemberBadges",
-                      memberBadges
-                    );
-                    // Add a callback if this isn’t a member sizing memberBadges
-
-                    return memberBadges;
+                  let memberBadges = [];
+                  data.data.members.forEach((member) => {
+                    console.log(member);
+                    if (member?.memberId?._id) {
+                      memberBadges.push({
+                        title: member.memberId.name,
+                        text: member.sizing,
+                        sizing: member.sizing,
+                        color: "red",
+                        memberId: member.memberId._id,
+                        cardId: cardId,
+                        listId: data.data.listId,
+                        pointId: member._id,
+                        callback: function (t) {
+                          // Fetch initial data
+                          //fetch
+                          const initialFormData = {
+                            cardId: cardId,
+                            pointId: member._id,
+                          };
+                          return t.popup({
+                            title: "Adjust Member Sizing",
+                            url: "./adjust-size.html",
+                            args: { initialFormData },
+                            height: 184,
+                          });
+                        },
+                      });
+                      console.log(
+                        "memberBadgesmemberBadgesmemberBadges",
+                        memberBadges
+                      );
+                    }
                   });
                   const categoriesBadges = data.data.members
                     // First, reduce to unique categories
@@ -379,6 +380,20 @@ window.TrelloPowerUp.initialize({
                         categoryId: member.categoryId._id,
                         pointId: member._id,
                         listId: data.data.listId,
+                        callback: function (t) {
+                          // Fetch initial data
+                          //fetch
+                          const initialFormData = {
+                            cardId: cardId,
+                            pointId: member._id,
+                          };
+                          return t.popup({
+                            title: "Adjust Member Sizing",
+                            url: "./adjust-size.html",
+                            args: { initialFormData },
+                            height: 184,
+                          });
+                        },
                       };
                       console.log("Unique Category Badge:", categoryBadge);
                       return categoryBadge;
@@ -426,7 +441,7 @@ window.TrelloPowerUp.initialize({
                   }));
 
                   detailBadges = [
-                    ...membersBadges,
+                    ...memberBadges,
                     ...categoriesBadges,
                     ...typesBadges,
                   ];

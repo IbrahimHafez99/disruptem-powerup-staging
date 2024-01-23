@@ -21,9 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((response) => response.json())
     .then((data) => {
       console.log("bodybody", data);
-      const defaultMember = data.data.memberId._id;
-      const defaultCategory = data.data.categoryId._id;
-      sizingInput.value = data.data.sizing;
+      const defaultMember = data.data?.memberId?._id;
+      const defaultCategory = data.data?.categoryId?._id;
+      sizingInput.value = data.data?.sizing;
       // Fetch additional members and populate the member select
       fetch(`${ENDPOINT_URL}/public/trello/members`)
         .then((response) => response.json())

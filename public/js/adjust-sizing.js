@@ -111,7 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       //creating new badge for category
       if (updatedData.categoryId) {
-        const categoryBadge = {
+        const existingCategoryBadge = detailBadgeData.find(badge => ((updatedData.categoryId && badge.categoryId) && (badge.categoryId === updatedData.categoryId)))
+        if(!existingCategoryBadge) {
+          const categoryBadge = {
           title: "",
           text: categorySelect.value.split("-")[2],
           sizing: parseFloat(sizingInput.value),
@@ -136,6 +138,36 @@ document.addEventListener("DOMContentLoaded", function () {
             });
           },
         };
+          detailBadgeData.push(categoryBadge)
+        }
+        
+      }
+      if(updatedData.memberId) {
+         const existingMemberBadge = detailBadgeData.find(badge => ((updatedData.memberId && badge.memberId) && (badge.memberId === updatedData.memberId)))
+         const memberBadge = {
+                        title: member.memberId.name,
+                        text: parseFloat(sizingInput.value),
+                        sizing: parseFloat(sizingInput.value),
+                        color: "red",
+                        memberId: member.memberId._id,
+                        cardId: cardId,
+                        listId: data.data.listId,
+                        pointId: member._id,
+                        callback: function (t) {
+                          // Fetch initial data
+                          //fetch
+                          const initialFormData = {
+                            cardId: cardId,
+                            pointId: member._id,
+                          };
+                          return t.popup({
+                            title: "Adjust Member Sizing",
+                            url: "./adjust-size.html",
+                            args: { initialFormData },
+                            height: 184,
+                          });
+                        },
+                      }
       }
       detailBadgeData.forEach((badge) => {
         if (badge.pointId === initialData.pointId && badge.categoryId) {

@@ -362,15 +362,13 @@ window.TrelloPowerUp.initialize({
                     .reduce((uniqueCategories, member) => {
                       if (
                         !uniqueCategories.some(
-                          (uc) => uc.categoryId._id === member.categoryId._id
+                          (uc) => uc.categoryId?._id === member.categoryId?._id
                         )
                       ) {
                         uniqueCategories.push(member);
                       }
                       return uniqueCategories;
-                    }, [])
-                    // Then, map to badges
-                    .map((member) => {
+                    }, []).filter(member => member.categoryId).map((member) => {
                       const categoryBadge = {
                         title: "",
                         text: member.categoryId.name,

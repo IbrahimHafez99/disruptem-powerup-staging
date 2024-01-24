@@ -50,6 +50,7 @@ async function onCategoryButtonClick(t) {
             list.categoriesSizing[categoryId] = {
               name: member.categoryId.name,
               sizing: 0,
+              color: member.categoryId.color
             };
           }
           list.categoriesSizing[categoryId].sizing += member.sizing;
@@ -62,14 +63,15 @@ async function onCategoryButtonClick(t) {
   }
 
   console.log("Result:", obj);
+  showResults(t, obj)
   return obj;
 }
 
-function showResults(t, obj2) {
+function showResults(t, obj) {
   return t.boardBar({
     url: "./results.html",
     height: 300,
-    args: { message: obj2 },
+    args: { message: obj },
   });
 }
 

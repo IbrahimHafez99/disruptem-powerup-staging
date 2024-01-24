@@ -101,7 +101,7 @@ $("#estimate").submit(async function (event) {
     });
 
     if (response.ok) {
-      const badgeData = (await t.get("card", "shared", "badgeData")) || [];
+      const badgeData = (await t.get("card", "shared", "detailBadgeData")) || [];
       const typeExists = badgeData.some(
         (badge) => badge.typeId === selectedTypeId
       );

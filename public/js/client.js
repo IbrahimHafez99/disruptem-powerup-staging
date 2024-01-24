@@ -522,7 +522,7 @@ function FetchAndPaint(t) {
                     console.log("Unique Category Badge:", categoryBadge);
                     return categoryBadge;
                   });
-
+                console.log("data.data.typesdata.data.typesdata.data.types", data.data.types)
                 const typesBadges = data.data.types.map((type) => ({
                   text: type.name,
                   color: type.color,

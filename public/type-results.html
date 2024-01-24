@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Types and Sizing</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
     <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css" />
     <style>
         .card {
@@ -13,10 +15,20 @@
         .card-header {
             font-weight: bold;
         }
+        .card-item {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+            color: white;
+            font-weight: bold;
+        }
+        .card-total {
+            background-color: #0079bf;
+        }
     </style>
 </head>
 <body>
-    <div id="typeContainer"></div>
+    <div id="resultsContainer"></div>
     <script src="./js/type-results.js"></script>
 </body>
 </html>

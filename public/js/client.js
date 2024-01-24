@@ -82,32 +82,28 @@ async function onTypeButtonClick(t) {
 
     let list = {
       listName: lists[i].name,
-      categoriesSizing: {},
       total: 0,
+      types: []
     };
-
     cards.forEach((card) => {
+      console.log("card.typescard.types", card.types)
+      let types = card.types.map(type => ({name: type.name, sizing: 0, color: type.color}))
       card.members.forEach((member) => {
-        if (member.categoryId) {
-          const categoryId = member.categoryId._id;
-          if (!list.categoriesSizing[categoryId]) {
-            list.categoriesSizing[categoryId] = {
-              name: member.categoryId.name,
-              sizing: 0,
-              color: member.categoryId.color
-            };
-          }
-          list.categoriesSizing[categoryId].sizing += member.sizing;
-          list.total += member.sizing;
+        if (member.memberId) {
+          types.forEach(type => {
+            type.sizing += member.sizing
+          })
+          
         }
       });
+      list.types = types
     });
-
+    
     obj.push(list)
   }
 
   console.log("Result:", obj);
-  showResults(t, obj)
+  showTypeResults(t, obj)
   return obj;
 }
 
@@ -153,7 +149,7 @@ window.TrelloPowerUp.initialize({
         text: "Type Report",
         condition: "always",
         callback: function (t) {
-          return onCategoryButtonClick(t);
+          return onTypeButtonClick(t);
         },
       },
     ];

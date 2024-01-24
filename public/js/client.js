@@ -71,7 +71,7 @@ async function onCategoryButtonClick(t) {
     cards.forEach(card => {
       const categoriesSizing = card.members.reduce((acc, element) => {
         if(acc[element.categoryId.name]) {
-          acc[element.categoryId.name] = 
+          acc[element.categoryId.name] = element.sizing
         }
       }, {})
     })

@@ -23,41 +23,10 @@ async function fetchCards() {
   return await response.json();
 }
 
-function aggregateCategories(data) {
-  const categories = {};
-
-  data.forEach((item) => {
-    // Check if the item is a category
-    if (item.categoryId) {
-      // Initialize the category if it hasn't been already
-      if (!categories[item.categoryId]) {
-        categories[item.categoryId] = {
-          text: item.text,
-          color: item.color,
-          icon: item.icon,
-          categoryId: item.categoryId,
-          sizing: 0,
-        };
-      }
-
-      // Add the sizing of each memberId associated with this category
-      item.memberIds.forEach((memberId) => {
-        const member = data.find((member) => member.memberId === memberId);
-        if (member) {
-          categories[item.categoryId].sizing += member.sizing;
-        }
-      });
-    }
-  });
-
-  // Convert the categories object into an array
-  return Object.values(categories);
-}
-
 async function onCategoryButtonClick(t) {
   const lists = await t.lists("all");
-  console.log("listslistslists", lists);
-  let obj = {};
+  let obj = [];
+
   for (let i = 0; i < lists.length; i++) {
     let listId = lists[i].id;
 
@@ -66,118 +35,34 @@ async function onCategoryButtonClick(t) {
     });
     const parsedResponse = await response.json();
     const cards = parsedResponse.data;
-    const list = {
+
+    let list = {
       listName: lists[i].name,
+      categoriesSizing: {},
+      total: 0,
     };
-    let total = 0;
-    const categoriesSizing = {};
+
     cards.forEach((card) => {
-      categoriesSizing = card.members.reduce((acc, element) => {
-        total += element.sizing;
-        console.log("acc[element.categoryId?._id]", element.categoryId?._id)
-        if (acc[element.categoryId?._id]) {
-          acc[element.categoryId._id] += element.sizing;
-        } else {
-          acc[element.categoryId._id] = {
-            name: element.categoryId.name,
-            sizing: element.sizing,
-          };
+      card.members.forEach((member) => {
+        if (member.categoryId) {
+          const categoryId = member.categoryId._id;
+          if (!list.categoriesSizing[categoryId]) {
+            list.categoriesSizing[categoryId] = {
+              name: member.categoryId.name,
+              sizing: 0,
+            };
+          }
+          list.categoriesSizing[categoryId].sizing += member.sizing;
+          list.total += member.sizing;
         }
-        console.log("categoriesSizing",acc)
-      }, {});
+      });
     });
-    list.categoriesSizing = categoriesSizing;
-    list.total = total;
-    console.log("listlistlistlistlistlist", list);
+
+    obj.push(list)
   }
 
-  //   return t.lists("all").then(function (lists) {
-  //     t.list;
-  //     console.log("lists", lists);
-  //     // lists.sort((a, b) => a.pos - b.pos);
-  //     let results = Array(lists.length);
-  //     let listPromises = lists.map(function (list, index) {
-  //       return t.cards("all").then(function (cards) {
-  //         var cardList = cards.filter((card) => card.idList === list.id);
-  //         console.log("CARDSSSSS", cardList);
-  //         let totalSizeList = 0;
-  //         let categories = [];
-
-  //         let cardPromises = cardList.map(function (card, index) {
-  //           return t
-  //             .get(card.id, "shared", "badgeData")
-  //             .then(function (badgeData) {
-  //               let totalSizeCard = 0;
-  //               console.log(`Card_badgeData_${index}`, badgeData);
-  //               if (badgeData) {
-  //                 totalSizeCard = badgeData.reduce((acc, element) => {
-  //                   if (
-  //                     element.sizing &&
-  //                     cardList.map((card) => card.id).includes(element.cardId)
-  //                   ) {
-  //                     return acc + Number(element.sizing);
-  //                   }
-  //                   return acc;
-  //                 }, 0);
-  //                 console.log("totalSizeCardtotalSizeCard", totalSizeCard);
-  //                 totalSizeList += totalSizeCard;
-
-  //                 const categorySize = badgeData
-  //                   .filter(
-  //                     (badge) =>
-  //                       badge.categoryId &&
-  //                       badge.listId === list.id &&
-  //                       badge.cardId === card.id
-  //                   )
-  //                   .map((category) => {
-  //                     return {
-  //                       categoryId: category.categoryId,
-  //                       name: category.text,
-  //                       color: category.color,
-  //                       sizing: category.memberIds.reduce((acc, memberId) => {
-  //                         const index = badgeData.findIndex(
-  //                           (badge) =>
-  //                             badge.memberId === memberId &&
-  //                             badge.listId === list.id &&
-  //                             badge.cardId === card.id
-  //                         );
-  //                         return acc + (index >= 0 ? badgeData[index].sizing : 0);
-  //                       }, 0),
-  //                     };
-  //                   });
-  //                 const aggregatedCategories = aggregateCategories(badgeData);
-  //                 console.log("aggregatedCategories", aggregatedCategories);
-  //                 categories = [...categories, ...aggregatedCategories];
-  //               }
-  //               return Promise.resolve();
-  //             });
-  //         });
-
-  //         return Promise.all(cardPromises).then(() => {
-  //           // Group by 'text' and sum 'sizing'
-  //           const result = Object.values(
-  //             categories.reduce((acc, { text, color, icon, sizing }) => {
-  //               if (!acc[text]) {
-  //                 acc[text] = { text, color, icon, sizing: 0 };
-  //               }
-  //               acc[text].sizing += sizing;
-  //               return acc;
-  //             }, {})
-  //           );
-  //           results[index] = {
-  //             listName: list.name,
-  //             totalPoints: totalSizeList,
-  //             categoryPoints: result,
-  //           };
-  //         });
-  //       });
-  //     });
-
-  //     return Promise.all(listPromises).then(() => {
-  //       console.log("results", results);
-  //       showResults(t, results);
-  //     });
-  //   });
+  console.log("Result:", obj);
+  return obj;
 }
 
 function showResults(t, obj2) {

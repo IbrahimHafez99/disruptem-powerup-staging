@@ -77,12 +77,17 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => response.json())
       .then((data) => {
-      console.log("datadatadatadata", data)
-      t.get("card", "shared", "detailBadgeData").then(function (detailBadgeData) {
-        
-      })
-        // Handle successful deletion
-        // t.closePopup();
+        console.log("datadatadatadata", data);
+        t.get("card", "shared", "detailBadgeData").then(function (
+          detailBadgeData
+        ) {
+          const newDetailBadgeData = detailBadgeData.filter(
+            (badge) => badge.pointId === initialData.pointId
+          );
+          t.set("card", "shared", "detailBadgeData", newDetailBadgeData)
+            .then(() => t.closePopup())
+            .catch((error) => console.log(error));
+        });
       })
       .catch((error) => {
         // Handle error

@@ -77,17 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("datadatadatadata", data);
-        t.get("card", "shared", "detailBadgeData").then(function (
-          detailBadgeData
-        ) {
-          const newDetailBadgeData = detailBadgeData.filter(
-            (badge) => badge.pointId === initialData.pointId
-          );
-          t.set("card", "shared", "detailBadgeData", newDetailBadgeData)
-            .then(() => t.closePopup())
-            .catch((error) => console.log(error));
-        });
+        FetchAndPaint(t);
       })
       .catch((error) => {
         // Handle error
@@ -228,3 +218,154 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
+function FetchAndPaint(t) {
+  return t
+    .get("card", "shared", "detailBadgeData")
+    .then(function (detailBadgeData) {
+      return t
+        .card("id")
+        .get("id")
+        .then(function (cardId) {
+          return fetch(`${ENDPOINT_URL}/cards/${cardId}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("datadatadatadatadata", data);
+              let detailBadges = [];
+              if (data.data) {
+                let memberBadges = [];
+                data.data.members.forEach((member) => {
+                  console.log(member);
+                  if (member?.memberId?._id) {
+                    memberBadges.push({
+                      title: member.memberId.name,
+                      text: member.sizing,
+                      sizing: member.sizing,
+                      color: "red",
+                      memberId: member.memberId._id,
+                      cardId: cardId,
+                      listId: data.data.listId,
+                      pointId: member._id,
+                      callback: function (t) {
+                        // Fetch initial data
+                        //fetch
+                        const initialFormData = {
+                          cardId: cardId,
+                          pointId: member._id,
+                        };
+                        return t.popup({
+                          title: "Adjust Member Sizing",
+                          url: "./adjust-size.html",
+                          args: { initialFormData },
+                          height: 240,
+                        });
+                      },
+                    });
+                    console.log(
+                      "memberBadgesmemberBadgesmemberBadges",
+                      memberBadges
+                    );
+                  }
+                });
+                const categoriesBadges = data.data.members
+                  // First, reduce to unique categories
+                  .reduce((uniqueCategories, member) => {
+                    if (
+                      !uniqueCategories.some(
+                        (uc) => uc.categoryId?._id === member.categoryId?._id
+                      )
+                    ) {
+                      uniqueCategories.push(member);
+                    }
+                    return uniqueCategories;
+                  }, [])
+                  .filter((member) => member.categoryId)
+                  .map((member) => {
+                    const categoryBadge = {
+                      title: "",
+                      text: member.categoryId.name,
+                      sizing: member.sizing,
+                      color: member.categoryId.color,
+                      cardId: cardId,
+                      categoryId: member.categoryId._id,
+                      pointId: member._id,
+                      listId: data.data.listId,
+                      // callback: function (t) {
+                      //   // Fetch initial data
+                      //   //fetch
+                      //   const initialFormData = {
+                      //     cardId: cardId,
+                      //     pointId: member._id,
+                      //     listId: data.data.listId
+                      //   };
+                      //   return t.popup({
+                      //     title: "Adjust Member Sizing",
+                      //     url: "./adjust-size.html",
+                      //     args: { initialFormData },
+                      //     height: 240,
+                      //   });
+                      // },
+                    };
+                    console.log("Unique Category Badge:", categoryBadge);
+                    return categoryBadge;
+                  });
+
+                const typesBadges = data.data.types.map((type) => ({
+                  text: type.name,
+                  color: type.color,
+                  icon: type.icon,
+                  typeId: type.id,
+                  cardId: cardId,
+                  listId: data.data.listId,
+
+                  callback: function (t) {
+                    // Logic to handle type deletion
+                    const deleteData = {
+                      typeId: type.id,
+                      cardId: cardId,
+                    };
+                    console.log("deleteData", deleteData);
+                    fetch(`${ENDPOINT_URL}/cards/delete-type`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(deleteData),
+                    })
+                      .then((response) => response.json())
+                      .then((responseData) => {
+                        // Remove the type from the badgeData
+                        const updatedDetailBadges = detailBadgeData.filter(
+                          (badge) => badge.typeId !== type.id
+                        );
+                        return t.set(
+                          "card",
+                          "shared",
+                          "detailBadgeData",
+                          updatedDetailBadges
+                        );
+                      })
+                      .catch((error) => {
+                        console.error("Error deleting type:", error);
+                      });
+                  },
+                }));
+
+                detailBadges = [
+                  ...memberBadges,
+                  ...categoriesBadges,
+                  ...typesBadges,
+                ];
+                console.log("detailBadges", detailBadges);
+              }
+
+              // Store the badge data in pluginData for future use
+              return t
+                .set("card", "shared", "detailBadgeData", detailBadges)
+                .then(() => {
+                  return detailBadges;
+                });
+            });
+        });
+    });
+}

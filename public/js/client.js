@@ -55,119 +55,129 @@ function aggregateCategories(data) {
 }
 
 async function onCategoryButtonClick(t) {
-  const lists = await t.lists("all")
-  console.log("listslistslists",lists)
-  let obj = {}
-  for(let i = 0; i < lists.length; i++) {
-    let listId = lists[i].id
-    
-    const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, { method: "GET" });
+  const lists = await t.lists("all");
+  console.log("listslistslists", lists);
+  let obj = {};
+  for (let i = 0; i < lists.length; i++) {
+    let listId = lists[i].id;
+
+    const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, {
+      method: "GET",
+    });
     const parsedResponse = await response.json();
-    const cards = parsedResponse.data
+    const cards = parsedResponse.data;
     const list = {
-      listName: lists[i].name
-    }
-    let total = 0
-    cards.forEach(card => {
-      const categoriesSizing = card.members.reduce((acc, element) => {
-        if(acc[element.categoryId.name]) {
-          acc[element.categoryId.name] += element.sizing
+      listName: lists[i].name,
+    };
+    let total = 0;
+    const categoriesSizing = {};
+    cards.forEach((card) => {
+      categoriesSizing = card.members.reduce((acc, element) => {
+        total += element.sizing;
+        console.log("acc[element.categoryId?._id]", element.categoryId?._id)
+        if (acc[element.categoryId?._id]) {
+          acc[element.categoryId._id] += element.sizing;
         } else {
-          acc[element.categoryId.name] = element.sizing
+          acc[element.categoryId._id] = {
+            name: element.categoryId.name,
+            sizing: element.sizing,
+          };
         }
-      }, {})
-    })
-    
-    console.log("cardscardscardscards",cards)
+        console.log("categoriesSizing",acc)
+      }, {});
+    });
+    list.categoriesSizing = categoriesSizing;
+    list.total = total;
+    console.log("listlistlistlistlistlist", list);
   }
-  
-//   return t.lists("all").then(function (lists) {
-//     t.list;
-//     console.log("lists", lists);
-//     // lists.sort((a, b) => a.pos - b.pos);
-//     let results = Array(lists.length);
-//     let listPromises = lists.map(function (list, index) {
-//       return t.cards("all").then(function (cards) {
-//         var cardList = cards.filter((card) => card.idList === list.id);
-//         console.log("CARDSSSSS", cardList);
-//         let totalSizeList = 0;
-//         let categories = [];
 
-//         let cardPromises = cardList.map(function (card, index) {
-//           return t
-//             .get(card.id, "shared", "badgeData")
-//             .then(function (badgeData) {
-//               let totalSizeCard = 0;
-//               console.log(`Card_badgeData_${index}`, badgeData);
-//               if (badgeData) {
-//                 totalSizeCard = badgeData.reduce((acc, element) => {
-//                   if (
-//                     element.sizing &&
-//                     cardList.map((card) => card.id).includes(element.cardId)
-//                   ) {
-//                     return acc + Number(element.sizing);
-//                   }
-//                   return acc;
-//                 }, 0);
-//                 console.log("totalSizeCardtotalSizeCard", totalSizeCard);
-//                 totalSizeList += totalSizeCard;
+  //   return t.lists("all").then(function (lists) {
+  //     t.list;
+  //     console.log("lists", lists);
+  //     // lists.sort((a, b) => a.pos - b.pos);
+  //     let results = Array(lists.length);
+  //     let listPromises = lists.map(function (list, index) {
+  //       return t.cards("all").then(function (cards) {
+  //         var cardList = cards.filter((card) => card.idList === list.id);
+  //         console.log("CARDSSSSS", cardList);
+  //         let totalSizeList = 0;
+  //         let categories = [];
 
-//                 const categorySize = badgeData
-//                   .filter(
-//                     (badge) =>
-//                       badge.categoryId &&
-//                       badge.listId === list.id &&
-//                       badge.cardId === card.id
-//                   )
-//                   .map((category) => {
-//                     return {
-//                       categoryId: category.categoryId,
-//                       name: category.text,
-//                       color: category.color,
-//                       sizing: category.memberIds.reduce((acc, memberId) => {
-//                         const index = badgeData.findIndex(
-//                           (badge) =>
-//                             badge.memberId === memberId &&
-//                             badge.listId === list.id &&
-//                             badge.cardId === card.id
-//                         );
-//                         return acc + (index >= 0 ? badgeData[index].sizing : 0);
-//                       }, 0),
-//                     };
-//                   });
-//                 const aggregatedCategories = aggregateCategories(badgeData);
-//                 console.log("aggregatedCategories", aggregatedCategories);
-//                 categories = [...categories, ...aggregatedCategories];
-//               }
-//               return Promise.resolve();
-//             });
-//         });
+  //         let cardPromises = cardList.map(function (card, index) {
+  //           return t
+  //             .get(card.id, "shared", "badgeData")
+  //             .then(function (badgeData) {
+  //               let totalSizeCard = 0;
+  //               console.log(`Card_badgeData_${index}`, badgeData);
+  //               if (badgeData) {
+  //                 totalSizeCard = badgeData.reduce((acc, element) => {
+  //                   if (
+  //                     element.sizing &&
+  //                     cardList.map((card) => card.id).includes(element.cardId)
+  //                   ) {
+  //                     return acc + Number(element.sizing);
+  //                   }
+  //                   return acc;
+  //                 }, 0);
+  //                 console.log("totalSizeCardtotalSizeCard", totalSizeCard);
+  //                 totalSizeList += totalSizeCard;
 
-//         return Promise.all(cardPromises).then(() => {
-//           // Group by 'text' and sum 'sizing'
-//           const result = Object.values(
-//             categories.reduce((acc, { text, color, icon, sizing }) => {
-//               if (!acc[text]) {
-//                 acc[text] = { text, color, icon, sizing: 0 };
-//               }
-//               acc[text].sizing += sizing;
-//               return acc;
-//             }, {})
-//           );
-//           results[index] = {
-//             listName: list.name,
-//             totalPoints: totalSizeList,
-//             categoryPoints: result,
-//           };
-//         });
-//       });
-//     });
+  //                 const categorySize = badgeData
+  //                   .filter(
+  //                     (badge) =>
+  //                       badge.categoryId &&
+  //                       badge.listId === list.id &&
+  //                       badge.cardId === card.id
+  //                   )
+  //                   .map((category) => {
+  //                     return {
+  //                       categoryId: category.categoryId,
+  //                       name: category.text,
+  //                       color: category.color,
+  //                       sizing: category.memberIds.reduce((acc, memberId) => {
+  //                         const index = badgeData.findIndex(
+  //                           (badge) =>
+  //                             badge.memberId === memberId &&
+  //                             badge.listId === list.id &&
+  //                             badge.cardId === card.id
+  //                         );
+  //                         return acc + (index >= 0 ? badgeData[index].sizing : 0);
+  //                       }, 0),
+  //                     };
+  //                   });
+  //                 const aggregatedCategories = aggregateCategories(badgeData);
+  //                 console.log("aggregatedCategories", aggregatedCategories);
+  //                 categories = [...categories, ...aggregatedCategories];
+  //               }
+  //               return Promise.resolve();
+  //             });
+  //         });
 
-//     return Promise.all(listPromises).then(() => {
-//       console.log("results", results);
-//       showResults(t, results);
-//     });
-//   });
+  //         return Promise.all(cardPromises).then(() => {
+  //           // Group by 'text' and sum 'sizing'
+  //           const result = Object.values(
+  //             categories.reduce((acc, { text, color, icon, sizing }) => {
+  //               if (!acc[text]) {
+  //                 acc[text] = { text, color, icon, sizing: 0 };
+  //               }
+  //               acc[text].sizing += sizing;
+  //               return acc;
+  //             }, {})
+  //           );
+  //           results[index] = {
+  //             listName: list.name,
+  //             totalPoints: totalSizeList,
+  //             categoryPoints: result,
+  //           };
+  //         });
+  //       });
+  //     });
+
+  //     return Promise.all(listPromises).then(() => {
+  //       console.log("results", results);
+  //       showResults(t, results);
+  //     });
+  //   });
 }
 
 function showResults(t, obj2) {
@@ -337,7 +347,7 @@ window.TrelloPowerUp.initialize({
   //   });
   // },
   "card-badges": function (t, options) {
-    return FetchAndPaint(t)
+    return FetchAndPaint(t);
   },
   "card-detail-badges": function (t, options) {
     return t
@@ -398,7 +408,9 @@ window.TrelloPowerUp.initialize({
                         uniqueCategories.push(member);
                       }
                       return uniqueCategories;
-                    }, []).filter(member => member.categoryId).map((member) => {
+                    }, [])
+                    .filter((member) => member.categoryId)
+                    .map((member) => {
                       const categoryBadge = {
                         title: "",
                         text: member.categoryId.name,
@@ -544,12 +556,14 @@ function FetchAndPaint(t) {
                       categoryId: member.categoryId._id,
                       pointId: member._id,
                       listId: data.data.listId,
-                   
                     };
                     console.log("Unique Category Badge:", categoryBadge);
                     return categoryBadge;
                   });
-                console.log("data.data.typesdata.data.typesdata.data.types", data.data.types)
+                console.log(
+                  "data.data.typesdata.data.typesdata.data.types",
+                  data.data.types
+                );
                 const typesBadges = data.data.types.map((type) => ({
                   text: type.name,
                   color: type.color,
@@ -598,7 +612,7 @@ function FetchAndPaint(t) {
                 ];
                 console.log("detailBadges", detailBadges);
               }
-              return detailBadges
+              return detailBadges;
             });
         });
     });

@@ -78,6 +78,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
       console.log("datadatadatadata", data)
+      t.get("card", "shared", "detailBadgeData").then(function (detailBadgeData) {
+        
+      })
         // Handle successful deletion
         // t.closePopup();
       })

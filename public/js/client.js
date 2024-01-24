@@ -310,7 +310,7 @@ window.TrelloPowerUp.initialize({
   //   });
   // },
   "card-badges": function (t, options) {
-    // return FetchAndPaint(t)
+    return FetchAndPaint(t)
   },
   "card-detail-badges": function (t, options) {
     return t
@@ -571,13 +571,7 @@ function FetchAndPaint(t) {
                 ];
                 console.log("detailBadges", detailBadges);
               }
-
-              // Store the badge data in pluginData for future use
-              return t
-                .set("card", "shared", "detailBadgeData", detailBadges)
-                .then(() => {
-                  return detailBadges;
-                });
+              return detailBadges
             });
         });
     });

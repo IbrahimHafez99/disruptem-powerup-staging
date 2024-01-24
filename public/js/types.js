@@ -91,7 +91,7 @@ $("#estimate").submit(async function (event) {
       boardId: board.id,
     };
     console.log("OUTPUTTTTTTTTTTTTTTTT", data);
-    const response = await fetch(`${API_URL}/cards/`, {
+    const response = await fetch(`${API_URL}/cards/type`, {
       // Replace '/your-endpoint' with your actual endpoint
       method: "POST",
       headers: {

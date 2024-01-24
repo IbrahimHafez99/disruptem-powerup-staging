@@ -59,7 +59,9 @@ async function onCategoryButtonClick(t) {
   for(let i = 0; i < lists.length; i++) {
     let listId = lists[i].id
     const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, { method: "GET" });
-    const cards = await response.json();
+    const parsedResponse = await response.json();
+    const cards = parsedResponse.data
+    
     console.log("cardscardscardscards",cards)
   }
   

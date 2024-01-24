@@ -56,12 +56,19 @@ function aggregateCategories(data) {
 async function onCategoryButtonClick(t) {
   const lists = await t.lists("all")
   console.log("listslistslists",lists)
+  let obj = {}
   for(let i = 0; i < lists.length; i++) {
     let listId = lists[i].id
     const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, { method: "GET" });
     const parsedResponse = await response.json();
     const cards = parsedResponse.data
-    
+    cards.forEach(card => {
+      card.members.reduce((acc, element) => {
+        if(acc[element.categoryId._id]) {
+          acc[element.categoryId._id]
+        }
+      }, obj)
+    })
     console.log("cardscardscardscards",cards)
   }
   

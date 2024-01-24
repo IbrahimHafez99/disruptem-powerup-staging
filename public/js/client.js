@@ -22,6 +22,7 @@ async function fetchCards() {
   const response = await fetch(`${ENDPOINT_URL}/cards/`, { method: "GET" });
   return await response.json();
 }
+
 function aggregateCategories(data) {
   const categories = {};
 
@@ -63,12 +64,16 @@ async function onCategoryButtonClick(t) {
     const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, { method: "GET" });
     const parsedResponse = await response.json();
     const cards = parsedResponse.data
+    const list = {
+      listName: lists[i].name
+    }
+    let total = 0
     cards.forEach(card => {
-      card.members.reduce((acc, element) => {
-        if(acc[element.categoryId._id]) {
-          acc[element.categoryId._id]
+      const categoriesSizing = card.members.reduce((acc, element) => {
+        if(acc[element.categoryId.name]) {
+          acc[element.categoryId.name] = 
         }
-      }, obj)
+      }, {})
     })
     console.log("cardscardscardscards",cards)
   }

@@ -53,7 +53,7 @@ function aggregateCategories(data) {
   return Object.values(categories);
 }
 
-function onBtnClickTwo(t) {
+function onCategoryButtonClick(t) {
   return t.lists("all").then(function (lists) {
     t.list;
     console.log("lists", lists);
@@ -164,7 +164,7 @@ window.TrelloPowerUp.initialize({
         text: "Categories Report",
         condition: "always",
         callback: function (t) {
-          return onBtnClickTwo(t);
+          return onCategoryButtonClick(t);
         },
       },
       {
@@ -176,7 +176,7 @@ window.TrelloPowerUp.initialize({
         text: "Type Report",
         condition: "always",
         callback: function (t) {
-          return onBtnClickTwo(t);
+          return onCategoryButtonClick(t);
         },
       },
     ];

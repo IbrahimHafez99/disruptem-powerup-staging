@@ -23,50 +23,6 @@ async function fetchCards() {
   return await response.json();
 }
 
-async function onCategoryButtonClick(t) {
-  const lists = await t.lists("all");
-  let obj = [];
-
-  for (let i = 0; i < lists.length; i++) {
-    let listId = lists[i].id;
-
-    const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, {
-      method: "GET",
-    });
-    const parsedResponse = await response.json();
-    const cards = parsedResponse.data;
-
-    let list = {
-      listName: lists[i].name,
-      categoriesSizing: {},
-      total: 0,
-    };
-
-    cards.forEach((card) => {
-      card.members.forEach((member) => {
-        if (member.categoryId) {
-          const categoryId = member.categoryId._id;
-          if (!list.categoriesSizing[categoryId]) {
-            list.categoriesSizing[categoryId] = {
-              name: member.categoryId.name,
-              sizing: 0,
-              color: member.categoryId.color
-            };
-          }
-          list.categoriesSizing[categoryId].sizing += member.sizing;
-          list.total += member.sizing;
-        }
-      });
-    });
-
-    obj.push(list)
-  }
-
-  console.log("Result:", obj);
-  showResults(t, obj)
-  return obj;
-}
-
 async function onTypeButtonClick(t) {
   const lists = await t.lists("all");
   let obj = [];
@@ -83,30 +39,30 @@ async function onTypeButtonClick(t) {
     let list = {
       listName: lists[i].name,
       total: 0,
-      types: []
+      types: {},
     };
+
     cards.forEach((card) => {
-      console.log("card.typescard.types", card.types)
-      let types = card.types.map(type => ({name: type.name, sizing: 0, color: type.color}))
       card.members.forEach((member) => {
-        if (member.memberId) {
-          types.forEach(type => {
-            type.sizing += member.sizing
-          })
-          
-        }
+        card.types.forEach((type) => {
+          if (!list.types[type._id]) {
+            list.types[type._id] = { name: type.name, sizing: 0, color: type.color };
+          }
+          list.types[type._id].sizing += member.sizing;
+          list.total += member.sizing;
+        });
       });
-      list.types = types
     });
-    
-    obj.push(list)
+
+    // Convert types object to array
+    list.types = Object.values(list.types);
+    obj.push(list);
   }
 
   console.log("Result:", obj);
-  showTypeResults(t, obj)
+  showTypeResults(t, obj);
   return obj;
 }
-
 
 function showResults(t, obj) {
   return t.boardBar({

@@ -310,7 +310,7 @@ window.TrelloPowerUp.initialize({
   //   });
   // },
   "card-badges": function (t, options) {
-    return FetchAndPaint(t)
+    // return FetchAndPaint(t)
   },
   "card-detail-badges": function (t, options) {
     return t

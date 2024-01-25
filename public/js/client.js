@@ -23,6 +23,59 @@ async function fetchCards() {
   return await response.json();
 }
 
+async function onCategoryButtonClick(t) {
+  const lists = await t.lists("all");
+  let obj = [];
+
+  for (let i = 0; i < lists.length; i++) {
+    let listId = lists[i].id;
+
+    const response = await fetch(`${ENDPOINT_URL}/cards/list/${listId}`, {
+      method: "GET",
+    });
+    const parsedResponse = await response.json();
+    const cards = parsedResponse.data;
+
+    let list = {
+      listName: lists[i].name,
+      categoriesSizing: {},
+      total: 0,
+    };
+
+    cards.forEach((card) => {
+      card.members.forEach((member) => {
+        if (member.categoryId) {
+          const categoryId = member.categoryId._id;
+          if (!list.categoriesSizing[categoryId]) {
+            list.categoriesSizing[categoryId] = {
+              name: member.categoryId.name,
+              sizing: 0,
+color: member.categoryId.color
+            };
+          }
+          list.categoriesSizing[categoryId].sizing += member.sizing;
+          list.total += member.sizing;
+        }
+      });
+    });
+
+    obj.push(list)
+  }
+
+  console.log("Result:", obj);
+  showResults(t, obj)
+  return obj;
+}
+
+function showResults(t, obj) {
+  return t.boardBar({
+    url: "./results.html",
+    height: 300,
+    args: { message: obj },
+  });
+}
+
+
 async function onTypeButtonClick(t) {
   const lists = await t.lists("all");
   let obj = [];
@@ -62,14 +115,6 @@ async function onTypeButtonClick(t) {
   console.log("Result:", obj);
   showTypeResults(t, obj);
   return obj;
-}
-
-function showResults(t, obj) {
-  return t.boardBar({
-    url: "./results.html",
-    height: 300,
-    args: { message: obj },
-  });
 }
 
 function showTypeResults(t, obj) {

@@ -6,7 +6,7 @@ var args = t.args[1]; // args is an object containing the arguments
 // Now use args to get your data
 var message = args.message;
 var results = message;
-console.log("resultsresultsresults", t.args)
+console.log("resultsresultsresults", results)
 var resultsContainer = document.getElementById("resultsContainer");
 
 results.forEach(function (list) {

@@ -1,47 +1,73 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Select Date Range</title>
-    <!-- Include Flatpickr library -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background-color: #282e33;
-        color: white;
+<html>
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/trello/power-up/latest.css">
+</head>
+<body>
+  <form id="date-form">
+    <label for="start-date">Start Date:</label><br>
+    <input type="date" id="start-date" name="start-date"><br>
+    <label for="end-date">End Date:</label><br>
+    <input type="date" id="end-date" name="end-date"><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <script src="https://unpkg.com/trello/power-up/latest.js"></script>
+  <script>
+    var t = TrelloPowerUp.iframe();
+
+    window.TrelloPowerUp.initialize({
+      'board-buttons': function(t, options) {
+        return [{
+          icon: './images/icon.svg',
+          text: 'My Button',
+          callback: function(t) {
+            return t.popup({
+              title: "Popup Title",
+              items: function(t, options) {
+                return [
+                  {
+                    text: "Item 1",
+                    callback: function(t) {
+                      // do something when item 1 is clicked
+                    }
+                  },
+                  {
+                    text: "Item 2",
+                    callback: function(t) {
+                      // do something when item 2 is clicked
+                    }
+                  }
+                ];
+              }
+            });
+          }
+        }];
       }
-    </style>
-  </head>
-  <body>
-    <h3>Select Date Range</h3>
-    <label for="startDate">Start Date:</label>
-    <input
-      type="text"
-      id="startDate"
-      class="flatpickr"
-      placeholder="Select start date"
-    />
+    });
 
-    <label for="endDate">End Date:</label>
-    <input
-      type="text"
-      id="endDate"
-      class="flatpickr"
-      placeholder="Select end date"
-    />
+    document.getElementById('date-form').addEventListener('submit', function(event){
+      event.preventDefault();
+      var startDate = document.getElementById('start-date').value;
+      var endDate = document.getElementById('end-date').value;
 
-    <button id="submitBtn">Submit</button>
-
-    <!-- Include your custom JavaScript file -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/default.js"></script>
-    <script src="./js/list-date.js"></script>
-  </body>
+      // Here you can send a request to your API
+      fetch('https://your-api.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ startDate, endDate }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
 </html>

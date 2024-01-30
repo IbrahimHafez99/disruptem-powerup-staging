@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Format the dates as needed and send to API
         const formattedStartDate = new Date(startDate).toISOString();
         const formattedEndDate = new Date(endDate).toISOString();
-
+        console.log(formattedStartDate, formattedEndDate)
         // Replace the following with your API endpoint and data format
         const apiUrl = 'YOUR_API_ENDPOINT';
         const requestData = {

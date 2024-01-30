@@ -50,7 +50,7 @@ async function onCategoryButtonClick(t) {
             list.categoriesSizing[categoryId] = {
               name: member.categoryId.name,
               sizing: 0,
-color: member.categoryId.color
+              color: member.categoryId.color,
             };
           }
           list.categoriesSizing[categoryId].sizing += member.sizing;
@@ -59,11 +59,11 @@ color: member.categoryId.color
       });
     });
 
-    obj.push(list)
+    obj.push(list);
   }
 
   console.log("Result:", obj);
-  showResults(t, obj)
+  showResults(t, obj);
   return obj;
 }
 
@@ -74,7 +74,6 @@ function showResults(t, obj) {
     args: { message: obj },
   });
 }
-
 
 async function onTypeButtonClick(t) {
   const lists = await t.lists("all");
@@ -99,7 +98,11 @@ async function onTypeButtonClick(t) {
       card.members.forEach((member) => {
         card.types.forEach((type) => {
           if (!list.types[type._id]) {
-            list.types[type._id] = { name: type.name, sizing: 0, color: type.color };
+            list.types[type._id] = {
+              name: type.name,
+              sizing: 0,
+              color: type.color,
+            };
           }
           list.types[type._id].sizing += member.sizing;
           list.total += member.sizing;
@@ -232,57 +235,7 @@ window.TrelloPowerUp.initialize({
       },
     ];
   },
-  // "card-badges": function (t, options) {
-  //   return t.get("card", "shared", "badgeData").then(function (badgeData) {
-  //     console.log("badgeData", badgeData);
-  //     // Otherwise, fetch the badge data from the backend and store it in pluginData
-  //     return t
-  //       .card("id")
-  //       .get("id")
-  //       .then(function (cardId) {
-  //         return fetch(`${ENDPOINT_URL}/cards/${cardId}`)
-  //           .then((response) => response.json())
-  //           .then((data) => {
-  //             console.log("data", data);
-  //             const membersBadges = data.data.members.map((member) => {
-  //               return {
-  //                 text: `${member.memberId.name} ${member.sizing}`,
-  //                 color: "red",
-  //                 sizing: member.sizing,
-  //                 memberId: member.memberId._id,
-  //                 cardId: cardId,
-  //                 listId: data.data.listId,
-  //               };
-  //             });
-  //             console.log(data.data.categories);
-  //             const categoriesBadges = data.data.categories.map((category) => ({
-  //               text: category.name,
-  //               color: category.color,
-  //               icon: category.icon,
-  //               categoryId: category.id,
-  //               cardId: cardId,
-  //               listId: data.data.listId,
-  //             }));
-  //             const typesBadges = data.data.types.map((type) => ({
-  //               text: type.name,
-  //               color: type.color,
-  //               typeId: type.id,
-  //               cardId: cardId,
-  //               listId: data.data.listId,
-  //             }));
-  //             const badges = [
-  //               ...membersBadges,
-  //               ...categoriesBadges,
-  //               ...typesBadges,
-  //             ];
-  //             // Store the badge data in pluginData for future use
-  //             return t.set("card", "shared", "badgeData", badges).then(() => {
-  //               return badges;
-  //             });
-  //           });
-  //       });
-  //   });
-  // },
+
   "card-badges": function (t, options) {
     return FetchAndPaint(t);
   },
@@ -435,6 +388,26 @@ window.TrelloPowerUp.initialize({
               });
           });
       });
+  },
+
+  "list-actions": function (t) {
+    return t.list("name", "id").then(function (list) {
+      return [
+        {
+          text: "List Date",
+          callback: function (t) {
+            // Trello will call this if the user clicks on this action
+            // we could for example open a new popover...
+            return t.popup({
+              title: "List Date",
+              url: "./list-date.html",
+              width: 300,
+              height: 300,
+            });
+          },
+        },
+      ];
+    });
   },
 });
 

@@ -1,8 +1,25 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <link rel="stylesheet" href="https://unpkg.com/trello/power-up/latest.css">
+  <style>
+    body {
+      background-color: #282E33;
+      color: #fff;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input[type="submit"] {
+      background-color: #0079BF;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <form id="date-form">
@@ -47,13 +64,27 @@
       }
     });
 
+    t.card('id')
+    .get('id')
+    .then(function(cardId) {
+      fetch('https://your-api.com/getById/' + cardId)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('start-date').value = data.startDate;
+        document.getElementById('end-date').value = data.endDate;
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    });
+
     document.getElementById('date-form').addEventListener('submit', function(event){
       event.preventDefault();
       var startDate = document.getElementById('start-date').value;
       var endDate = document.getElementById('end-date').value;
 
       // Here you can send a request to your API
-      fetch('https://your-api.com', {
+      fetch('https://your-api.com/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

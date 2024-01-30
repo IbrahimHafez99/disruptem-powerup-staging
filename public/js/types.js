@@ -35,7 +35,7 @@ function fetchTypes() {
     type: "GET",
     success: function (data) {
       console.log("datadatadatadatadata", data);
-      populateTypes(data);
+      populateTypes(data.types);
     },
     error: function (error) {
       console.error("Error fetching members", error);

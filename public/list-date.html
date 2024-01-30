@@ -2,6 +2,8 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://unpkg.com/trello/power-up/latest.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://p.trellocdn.com/power-up.min.js"></script>
   <style>
     body {
       background-color: #282E33;
@@ -32,42 +34,43 @@
 
   <script src="https://unpkg.com/trello/power-up/latest.js"></script>
   <script>
-    var t = TrelloPowerUp.iframe();
+    var t = window.TrelloPowerUp.iframe();
+    var ENDPOINT_URL = "http://localhost:9000/api/v1";
 
-    window.TrelloPowerUp.initialize({
-      'board-buttons': function(t, options) {
-        return [{
-          icon: './images/icon.svg',
-          text: 'My Button',
-          callback: function(t) {
-            return t.popup({
-              title: "Popup Title",
-              items: function(t, options) {
-                return [
-                  {
-                    text: "Item 1",
-                    callback: function(t) {
-                      // do something when item 1 is clicked
-                    }
-                  },
-                  {
-                    text: "Item 2",
-                    callback: function(t) {
-                      // do something when item 2 is clicked
-                    }
-                  }
-                ];
-              }
-            });
-          }
-        }];
-      }
-    });
+    // window.TrelloPowerUp.initialize({
+    //   'board-buttons': function(t, options) {
+    //     return [{
+    //       icon: './images/icon.svg',
+    //       text: 'My Button',
+    //       callback: function(t) {
+    //         return t.popup({
+    //           title: "Popup Title",
+    //           items: function(t, options) {
+    //             return [
+    //               {
+    //                 text: "Item 1",
+    //                 callback: function(t) {
+    //                   // do something when item 1 is clicked
+    //                 }
+    //               },
+    //               {
+    //                 text: "Item 2",
+    //                 callback: function(t) {
+    //                   // do something when item 2 is clicked
+    //                 }
+    //               }
+    //             ];
+    //           }
+    //         });
+    //       }
+    //     }];
+    //   }
+    // });
 
     t.card('id')
     .get('id')
     .then(function(cardId) {
-      fetch('https://your-api.com/getById/' + cardId)
+      fetch(`${ENDPOINT_URL}/getById/`)
       .then(response => response.json())
       .then(data => {
         document.getElementById('start-date').value = data.startDate;

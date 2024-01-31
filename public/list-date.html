@@ -67,6 +67,13 @@
           event.preventDefault();
           var startDate = document.getElementById("start-date").value;
           var endDate = document.getElementById("end-date").value;
+
+          // Validate dates
+          if (new Date(startDate) > new Date(endDate)) {
+            alert("The start date must be before the end date.");
+            return; // Stop the form from being submitted
+          }
+
           const listId = await t.list("id");
           console.log(listId.id);
           // Here you can send a request to your API

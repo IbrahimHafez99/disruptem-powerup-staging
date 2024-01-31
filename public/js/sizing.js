@@ -27,6 +27,14 @@ var t = window.TrelloPowerUp.iframe();
 $(document).ready(function () {
   fetchMembers();
   fetchCategories();
+   $('#members').on('change', function() {
+    // Get the selected member ID from the dropdown
+    const selectedMemberId = $(this).val().split("-")[1];
+     console.log("selectedMemberIdselectedMemberId", selectedMemberId)
+    // Assuming you have a way to find the default category ID for this member
+    // This could involve fetching from the backend or looking up a locally stored object
+    // updateCategoriesForSelectedMember(selectedMemberId);
+  });
 });
 
 //fetch members from backend
@@ -83,12 +91,14 @@ function populateMembers(members) {
     const data = await response.json();
     console.log("ddbdbdbdbb", data);
     const membersList = $("#members");
+    
     members.forEach(function (member) {
+      console.log("mmmmmmmmmmmmmmm", member.defaultCategories[board.id])
       // Exclude members that have sizing data
       if (
         !data?.data?.members?.map((mem) => mem.memberId?._id).includes(member._id)
       ) {
-        const option = `<option value="${member._id}">${member.name}</option>`;
+        const option = `<option value="${member._id}-${member.defaultCategories[board.id]}">${member.name}</option>`;
         membersList.append(option);
       }
     });
@@ -99,7 +109,7 @@ function populateMembers(members) {
 $("#estimate").submit(async function (event) {
   event.preventDefault();
 
-  const selectedMemberId = $("#members").val();
+  const [selectedMemberId, defaultCategoryId] = $("#members").val().split("-");;
   const [selectedCategoryId, selectedCategoryColor] = $("#categories")
     .val()
     .split("-");

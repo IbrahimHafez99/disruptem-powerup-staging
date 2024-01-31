@@ -29,21 +29,21 @@ $(document).ready(function () {
   fetchCategories();
    $('#members').on('change', function() {
     // Get the selected member ID from the dropdown
-    const selectedMemberId = $(this).val().split("-")[1];
-     console.log("selectedMemberIdselectedMemberId", selectedMemberId)
+    const defaultCategoryId = $(this).val().split("-")[1];
+     console.log("selectedMemberIdselectedMemberId", defaultCategoryId)
     // Assuming you have a way to find the default category ID for this member
     // This could involve fetching from the backend or looking up a locally stored object
-    // updateCategoriesForSelectedMember(selectedMemberId);
+    fetchCategories(defaultCategoryId)
   });
 });
 
 //fetch members from backend
-function fetchCategories() {
+function fetchCategories(defaultCategoryId) {
   $.ajax({
     url: `${API_URL}/public/trello/categories`,
     type: "GET",
     success: function (data) {
-      populateCategories(data.data.categories);
+      populateCategories(data.data.categories, defaultCategoryId);
     },
     error: function (error) {
       console.error("Error fetching members", error);
